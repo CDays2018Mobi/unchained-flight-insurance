@@ -1,4 +1,4 @@
-package ch.mobi.ufi.web;
+package ch.mobi.ufi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
