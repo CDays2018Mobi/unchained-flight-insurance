@@ -1,0 +1,1 @@
+java -jar unchained-flight-insurance/target/unchained-flight-insurance-web-1.0-SNAPSHOT.jar
