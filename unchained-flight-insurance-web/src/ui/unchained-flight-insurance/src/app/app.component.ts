@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'the Unchained Flight Insurance App!';
+  title = 'the Unchained Flight Insurance App';
 }
