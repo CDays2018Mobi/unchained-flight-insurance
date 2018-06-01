@@ -14,7 +14,9 @@ public class SayHello {
 
     @GetMapping
     public ResponseEntity<String> hello(@RequestParam(value = "who", required = false) String who) {
-        return ok(String.format("Hello %s !", who));
+        String msg = String.format("Hello %s !", who);
+    	LOG.info(msg);
+		return ok(msg);
     }
 }
 
