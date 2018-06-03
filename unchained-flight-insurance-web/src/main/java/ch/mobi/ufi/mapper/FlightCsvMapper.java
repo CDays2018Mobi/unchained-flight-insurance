@@ -16,10 +16,10 @@ public class FlightCsvMapper extends CsvMapper<Flight> {
 		columns.put("Flight number", Flight::getFlightNumber);
 		columns.put("Flight status", f->f.getFlightStatus()!=null?f.getFlightStatus().name():"");
 		columns.put("ExpectedDelay", f-> CsvMapper.toCsvValue(f.getExpectedDelay()));
-		columns.put("Arrival Date Delta [minutes]", f-> 
-			f.getEffectiveArrivalDate()!=null?
-				Long.toString(ChronoUnit.MINUTES.between(f.getExpectedArrivalDate(), f.getEffectiveArrivalDate())):
-				"");
+		columns.put("Arrival Date Delta [minutes]", f-> {
+			Long effectiveDelay = f.getEffectiveDelay();
+			return effectiveDelay!=null?Long.toString(effectiveDelay):"";
+		});
 	}
 	
 	public FlightCsvMapper() {

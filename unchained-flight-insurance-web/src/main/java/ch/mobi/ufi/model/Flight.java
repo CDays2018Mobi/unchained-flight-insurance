@@ -2,6 +2,7 @@ package ch.mobi.ufi.model;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import lombok.Builder;
 import lombok.Data;
@@ -18,5 +19,15 @@ public class Flight {
 	private Airline airline;
 	private String flightNumber;
 	private FlightStatus flightStatus;
-	private Duration expectedDelay;	
+	private Duration expectedDelay;
+	
+	/**
+	 * Returns the effective delay in minutes from the expected arrival date to the effective arrival date.
+	 * Returns null when some data is missing
+	 * @return 
+	 */
+	public Long getEffectiveDelay() {
+		return getEffectiveArrivalDate()!=null?
+				ChronoUnit.MINUTES.between(getExpectedArrivalDate(), getEffectiveArrivalDate()):null;
+	}
 }

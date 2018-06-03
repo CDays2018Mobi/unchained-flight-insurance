@@ -77,3 +77,4 @@ fabric.properties
 hs_err_pid*
 
 /unchained-flight-insurance-web/src/main/resources/static/
+/.project

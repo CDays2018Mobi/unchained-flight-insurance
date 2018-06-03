@@ -4,7 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -14,14 +16,19 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import ch.mobi.ufi.mapper.CsvMapper;
 import ch.mobi.ufi.mapper.FlightCsvMapper;
+import ch.mobi.ufi.model.Airline;
 import ch.mobi.ufi.model.Flight;
 import ch.mobi.ufi.model.FlightIdentifier;
+import ch.mobi.ufi.risk.DelayEstimator;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -43,45 +50,80 @@ public class FlightRepository {
 	private Map<FlightIdentifier, CachedFlight> cache = new HashMap<>(); // TODO migrate to a better cache mechanism, such as Cache2k
 	
 	private List<FlightsSupplier> suppliers = Arrays.asList(new GvaFlightsSupplier());
+
+	@Autowired
+	private DelayEstimator delayEstimator;
 	
 	
 	public FlightRepository() {
+	}
+	
+	@PostConstruct
+	public void postConstruct() {
 		refreshFlightList();
 	}
+	
 
 	/**
 	 * Refreshes the list of flights by calling each supplier
 	 * TODO schedule a daily call to all suppliers to refresh cache data
 	 */
-	private void refreshFlightList() {
+	public List<Flight> refreshFlightList() {
+		List<LocalDate> dates = new ArrayList<>();
+		LocalDate currentDate = LocalDate.of(2018, Month.MAY, 21);
+		for (int i=0; i<20; i++) {
+			dates.add(currentDate);
+			currentDate = currentDate.plusDays(1L);
+//			if (currentDate.isAfter(LocalDate.now().minusDays(4L))) { // TODO remove temp code
+//				break;
+//			}
+		}
+
+		List<Flight> allFlights = new ArrayList<>();
+		for (FlightsSupplier flightsSupplier : suppliers) {
+			// TODO find a way to initialize faster (to lower the application startup)
+			dates.parallelStream()
+				.map(arrivalDate->DefaultFlightParameters.builder().date(arrivalDate).build())
+				.forEach(param->{
+					List<Flight> flights = flightsSupplier.getFlights(param);
+					allFlights.addAll(flights);
+					updateCache(flights, param.getDate());
+				});
+		}
+		allFlights.sort(Comparator.comparing(Flight::getExpectedArrivalDate));
+
+		// initializes the delay estimator
+		int delayThreshold = 60;
+		delayEstimator.initialize(allFlights, Arrays.asList(10, delayThreshold));
+//		delayEstimator.computeProbabilityOfBeingDelayed(Flight.builder()
+//				.airline(Airline.builder().companyName("EASYJET").build())
+//				.expectedArrivalDate(toDate("2018-06-03 13:00")) // sunday
+//				.build(), delayThreshold); // 32% of chance to be late by more than one hour
+//		delayEstimator.computeProbabilityOfBeingDelayed(Flight.builder()
+//				.airline(Airline.builder().companyName("EASYJET").build())
+//				.expectedArrivalDate(toDate("2018-06-03 07:00")) // sunday
+//				.build(), delayThreshold); // 7% of chance to be late by more than one hour
+//		delayEstimator.computeProbabilityOfBeingDelayed(Flight.builder()
+//				.airline(Airline.builder().companyName("QATAR AIRWAYS").build())
+//				.expectedArrivalDate(toDate("2018-06-03 13:00")) // sunday
+//				.build(), delayThreshold); // 0% of chance to be late by more than one hour
+
+	
+		// store the flights to CSV
 		try (PrintWriter out = new PrintWriter("flights.csv")) {
 			CsvMapper<Flight> csvMapper = new FlightCsvMapper();
 			out.println(csvMapper.getCsvHeader());
-
-			List<LocalDate> dates = new ArrayList<>();
-			LocalDate currentDate = LocalDate.of(2018, Month.MAY, 21);
-			for (int i=0; i<20; i++) {
-				dates.add(currentDate);
-				currentDate = currentDate.plusDays(1L);
-			}
-
-			for (FlightsSupplier flightsSupplier : suppliers) {
-
-				// TODO find a way to initialize faster (to lower the application startup)
-				dates.parallelStream()
-					.map(arrivalDate->DefaultFlightParameters.builder().date(arrivalDate).build())
-					.forEach(param->{
-						List<Flight> flights = flightsSupplier.getFlights(param);
-						flights.forEach(flight->out.println(csvMapper.toCsvRow(flight)));
-						updateCache(flights, param.getDate());
-					});
-
-			}
+			allFlights.forEach(flight->out.println(csvMapper.toCsvRow(flight)));
 		} catch (FileNotFoundException e) {
 			LOG.error("could not store flight data", e);
 		}
+		return allFlights;
 	}
-	
+
+	private LocalDateTime toDate(String s) {
+		return LocalDateTime.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+	}
+
 	private void updateCache(List<Flight> flights, LocalDate currentDate) {
 		flights.forEach(flight-> cache.put(
 				buildKey(flight.getFlightNumber(), currentDate), 
