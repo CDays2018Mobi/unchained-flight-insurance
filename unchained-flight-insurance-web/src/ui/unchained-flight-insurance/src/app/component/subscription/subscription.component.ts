@@ -26,10 +26,10 @@ export class SubscriptionComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-        flightId: [''],
-        arrivalDate: [''],
-        ticketId: [''],
-        email: [''],
+        flightId: ['', [Validators.required]],
+        arrivalDate: ['', [Validators.required]],
+        ticketId: ['', [Validators.required]],
+        email: ['', [Validators.required]],
       }
     );
   }
