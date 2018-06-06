@@ -6,39 +6,54 @@
 
 <form [formGroup]="form">
 
-<span class="ui-float-label">
-    <input id="flightId" formControlName="flightId" type="text" size="30" pInputText>
-    <label for="flightId">Flight id</label>
-</span>
-<span class="ui-float-label">
-  <p-calendar id="arrivalDate" formControlName="arrivalDate" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
-  <label for="arrivalDate">Arrival date</label>
-</span>
-<span class="ui-float-label">
-    <input id="ticketId" formControlName="ticketId" type="text" size="30" pInputText>
-    <label for="ticketId">Ticket id</label>
-</span>
-<span class="ui-float-label">
+    <span class="ui-float-label">
+      <input id="flightId" formControlName="flightId" type="text" pInputText>
+      <label for="flightId">Flight id</label>
+    </span>
+
+  <span class="ui-float-label">
+      <p-calendar id="arrivalDate" formControlName="arrivalDate" [showIcon]="true" dateFormat="yy-mm-dd"></p-calendar>
+      <label for="flightId">Arrival date</label>
+    </span>
+
+  <span class="ui-float-label">
+      <input id="ticketId" formControlName="ticketId" type="text" size="30" pInputText>
+      <label for="flightId">Ticket id</label>
+    </span>
+
   <p-listbox id="guarantee-level" [options]="levels" [style]="{'width':'300px'}">
     <p-header>
       <i class="fa fa-plane"></i>
       Available guarantee levels
     </p-header>
     <ng-template let-level let-i="index" pTemplate="item">
-        <div class="ui-helper-clearfix">
-            <img src="assets/img/level/{{level.label}}.png" style="display:inline-block;margin:5px 0 0 5px" width="48">
-            <span style="float:right;margin:20px 10px 0 0">{{i}} - {{level.value}}</span>
-        </div>
+      <div class="ui-helper-clearfix">
+        <table>
+          <tr>
+            <td>
+              <img src="assets/img/level/{{level.label}}.png" height="50">
+            </td>
+            <td>
+              <span>
+                {{level.value}}
+                <br>CHF 10'000
+                <br>CHF 20.00
+              </span>
+            </td>
+          </tr>
+        </table>
+      </div>
     </ng-template>
     <p-footer>
-        Description : {{selectedLevel||'none'}}
+      Description : {{selectedLevel||'none'}}
     </p-footer>
-</p-listbox>
-</span>
-<span class="ui-float-label">
-    <input id="email" formControlName="email" type="text" size="30" pInputText>
-    <label for="email">Email</label>
-</span>
-<p-button icon="fa fa-fw fa-check" iconPos="right" label="Subscribe" [disabled]="form.invalid" (click)="submit()"></p-button>
+  </p-listbox>
+
+  <span class="ui-float-label">
+      <input id="email" formControlName="email" type="text" size="30" pInputText>
+      <label for="flightId">Email</label>
+    </span>
+
+  <p-button icon="fa fa-fw fa-check" iconPos="right" label="Subscribe" [disabled]="form.invalid" (click)="submit()"></p-button>
 
 </form>

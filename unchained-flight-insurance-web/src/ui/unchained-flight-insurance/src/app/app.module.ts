@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import {ButtonModule} from 'primeng/button';
-import {CalendarModule, DropdownModule} from 'primeng/primeng';
+import {CalendarModule, DropdownModule, InputTextModule} from 'primeng/primeng';
 import {ListboxModule} from 'primeng/listbox';
 
 import { AppComponent } from './app.component';
@@ -29,6 +29,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     CalendarModule,
     ListboxModule,
     HttpClientModule,
+    InputTextModule
   ],
   providers: [ContractClient],
   bootstrap: [AppComponent]
