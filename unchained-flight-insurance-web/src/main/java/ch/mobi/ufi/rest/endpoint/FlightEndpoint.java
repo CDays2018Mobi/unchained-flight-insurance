@@ -2,7 +2,8 @@ package ch.mobi.ufi.rest.endpoint;
 
 import ch.mobi.ufi.domain.flight.entity.Airline;
 import ch.mobi.ufi.domain.flight.entity.Flight;
-import ch.mobi.ufi.domain.flight.repository.FlightRepository;
+import ch.mobi.ufi.domain.flight.repository.FlightCache;
+import ch.mobi.ufi.domain.flight.service.FlightService;
 import ch.mobi.ufi.domain.risk.predictor.DelayEstimator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +25,21 @@ import static org.springframework.http.ResponseEntity.ok;
 public class FlightEndpoint {
 
     @Autowired
-    private FlightRepository flightRepository;
+    private FlightService flightService;
+    @Autowired
+    private FlightCache flightCache;
     @Autowired
     private DelayEstimator delayEstimator;
 
     @GetMapping("/flights")
     public ResponseEntity<List<Flight>> getFlights() {
-        return ok(flightRepository.getFlights(flight -> flight.getExpectedArrivalDate()
+        return ok(flightCache.getFlights(flight -> flight.getExpectedArrivalDate()
                 .isAfter(LocalDate.now().minusDays(1).atStartOfDay())));
     }
 
     @PutMapping("/refresh")
     public ResponseEntity<String> refreshFlights() {
-        List<Flight> flights = flightRepository.refreshFlightList();
+        List<Flight> flights = flightService.refreshFlightList();
         return ok("refresh done: found " + flights.size() + " flights");
     }
 
