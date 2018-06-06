@@ -37,6 +37,7 @@ public class FlightEndpoint {
                 .isAfter(LocalDate.now().minusDays(1).atStartOfDay())));
     }
 
+    @GetMapping("/refresh") // not compliant but convenient to refresh from the browser
     @PutMapping("/refresh")
     public ResponseEntity<String> refreshFlights() {
         List<Flight> flights = flightService.refreshFlightList();

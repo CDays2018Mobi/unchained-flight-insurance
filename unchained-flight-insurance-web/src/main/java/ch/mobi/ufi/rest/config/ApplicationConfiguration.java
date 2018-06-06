@@ -1,5 +1,8 @@
 package ch.mobi.ufi.rest.config;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 import ch.mobi.ufi.domain.contract.repository.ContractRepository;
 import ch.mobi.ufi.domain.contract.repository.InMemoryContractRepository;
 import ch.mobi.ufi.domain.contract.service.ContractService;
@@ -11,9 +14,8 @@ import ch.mobi.ufi.domain.flight.repository.FlightCache;
 import ch.mobi.ufi.domain.flight.service.FlightService;
 import ch.mobi.ufi.domain.risk.predictor.BayesianDelayEstimator;
 import ch.mobi.ufi.domain.risk.predictor.DelayEstimator;
+import ch.mobi.ufi.domain.risk.predictor.PricingCalculator;
 import lombok.NonNull;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ApplicationConfiguration {
@@ -42,6 +44,11 @@ public class ApplicationConfiguration {
         return new BayesianDelayEstimator();
     }
 
+    @Bean
+    public PricingCalculator pricingCalculator(DelayEstimator delayEstimator) {
+        return new PricingCalculator(delayEstimator);
+    }
+    
     @Bean
     public FlightCache flightCache() {
         return new FlightCache();

@@ -1,5 +1,7 @@
 package ch.mobi.ufi.domain.risk.predictor;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -9,10 +11,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import ch.mobi.ufi.domain.flight.entity.Flight;
 import lombok.AllArgsConstructor;
@@ -68,6 +66,7 @@ public class BayesianDelayEstimator implements DelayEstimator {
 	List<Dimension> dimensions = Arrays.asList(
 			new Dimension("companyName", f->f.getAirline().getCompanyName()),
 			new Dimension("expectedArrivalHour", f->mapHour(f.getExpectedArrivalDate().getHour())),
+			//new Dimension("startingAirport", f->f.getStartingAirport()), // on ne peut pas tenir compte de l'aéroport de départ car ce n'est pas une variable indépendante du triplet companyName/expectedArrivalHour/arrivalDayOfWeek
 			new Dimension("expectedArrivalDayOfWeek", f->f.getExpectedArrivalDate().getDayOfWeek()));
 	Dimension variable;
 	List<Integer> flightDelayThresholds;
@@ -146,6 +145,27 @@ public class BayesianDelayEstimator implements DelayEstimator {
 		}
 		for (String key : countPerAllDimension.keySet()) {
 			LOG.info("p({})={}", key, countPerAllDimension.getProbability(key));
+		}
+		
+		// validation
+		// Note: on calcule la probabilité de retard sur chaque vol de l'ensemble 
+		// d'apprentissage. Ce faisant, on tord un peu le système (car le vol de 
+		// l'ensemble de test est aussi dans l'ensemble d'apprentissage, mais
+		// cela donne au moins une idée).
+		int minDelay=60; // 60 minutes
+		try (PrintWriter out = new PrintWriter("bayesValidation.csv")) {
+			out.println(dimensions.stream()
+					.map(d->d.name)
+					.collect(Collectors.joining(";"))+
+					";probabilityOf"+minDelay+"Delay");
+			for (Flight flight : allFlights) {
+				out.println(dimensions.stream()
+						.map(d->d.function.apply(flight).toString()).collect(Collectors.joining(";"))+
+						";"+computeProbabilityOfBeingDelayed(flight, minDelay));
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 		
