@@ -5,6 +5,8 @@
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/unchained-flight-insurance-web/src/ui/unchained-flight-insurance/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/unchained-flight-insurance-web/src/ui/unchained-flight-insurance/tmp" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

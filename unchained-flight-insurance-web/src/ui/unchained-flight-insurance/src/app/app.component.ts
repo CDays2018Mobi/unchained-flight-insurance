@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import {ContractService} from "./service/contract.service";
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -7,7 +6,4 @@ import {ContractService} from "./service/contract.service";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-
-  constructor(private contractService: ContractService) {
-  }
 }

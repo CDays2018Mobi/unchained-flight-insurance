@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.time.Duration;
 
 import static org.springframework.http.ResponseEntity.ok;
@@ -26,7 +27,7 @@ public class ContractEndpoint {
     private ContractService contractService;
 
     @PostMapping
-    public ResponseEntity<Contract> create(ContractDTO contractDTO) {
+    public ResponseEntity<Contract> create(@Valid ContractDTO contractDTO) {
         LOG.info("create contract for: flightNumber={}, arrivalDate={}", contractDTO.getFlightNumber(), contractDTO.getArrivalDate());
         return ok(contractService.createContract(
                 FlightIdentifier.builder()

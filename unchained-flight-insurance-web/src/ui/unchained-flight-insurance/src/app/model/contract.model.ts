@@ -1,4 +1,4 @@
 export class Contract {
-  constructor(public flightNumber: string, public arrivalDate: string) {
+  constructor(public flightId: string, public arrivalDate: string) {
   }
 }
