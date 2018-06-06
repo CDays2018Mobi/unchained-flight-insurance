@@ -4,7 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import {Contract} from "../model/contract.model";
 
 @Injectable()
-export class ContractService {
+export class ContractClient {
 
   constructor(private http: HttpClient) {
   }
