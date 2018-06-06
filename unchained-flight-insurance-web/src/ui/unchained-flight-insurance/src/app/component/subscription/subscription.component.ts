@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {SelectItem} from 'primeng/api';
 import {ContractClient} from '../../service/contract-client.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {Contract} from "../../model/contract.model";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Contract} from '../../model/contract.model';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-subscription',
@@ -11,16 +12,16 @@ import {Contract} from "../../model/contract.model";
 })
 export class SubscriptionComponent implements OnInit {
 
-  levels : SelectItem[];
+  levels: SelectItem[];
   selectedLevel: string;
   form: FormGroup;
 
   constructor(private fb: FormBuilder,
               private contracClient: ContractClient) {
     this.levels = [
-      {label:'Basic', value:'Basic'},
-      {label:'Medium', value:'Medium'},
-      {label:'Ultimate', value:'Ultimate'}
+      {label: 'Basic', value: 'Basic'},
+      {label: 'Medium', value: 'Medium'},
+      {label: 'Ultimate', value: 'Ultimate'}
     ];
   }
 
@@ -35,7 +36,10 @@ export class SubscriptionComponent implements OnInit {
   }
 
   submit() {
-    this.contracClient.create$(new Contract(this.form.value.flightId, this.form.value.arrivalDate))
-      .subscribe(contract => console.log(JSON.stringify(contract)));
+    this.contracClient.create$(
+      new Contract(
+        this.form.value.flightId,
+        moment(this.form.value.arrivalDate).format('YYYY-MM-DD')))
+        .subscribe(contract => console.log(JSON.stringify(contract)));
   }
 }
