@@ -71,7 +71,8 @@ public class FlightService {
      * TODO schedule a daily call to all suppliers to refresh cache data
      */
     public List<Flight> refreshFlightList() {
-        LocalDate currentDate = LocalDate.of(2018, Month.MAY, 21);
+        final LocalDate FIRST_DAY_OF_ARRIVAL_LOG = LocalDate.of(2018, Month.MAY, 21);
+        LocalDate currentDate = FIRST_DAY_OF_ARRIVAL_LOG;
         List<LocalDate> dates = getDates(currentDate);
         List<Flight> allFlights = provisionFlights(dates);
         int delayThreshold = 60;
