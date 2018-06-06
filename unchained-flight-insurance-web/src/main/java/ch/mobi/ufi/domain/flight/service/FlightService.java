@@ -3,14 +3,10 @@ package ch.mobi.ufi.domain.flight.service;
 import ch.mobi.ufi.domain.flight.entity.Flight;
 import ch.mobi.ufi.domain.flight.parameters.DefaultFlightParameters;
 import ch.mobi.ufi.domain.flight.repository.FlightCache;
-import ch.mobi.ufi.domain.flight.service.FlightsSupplier;
-import ch.mobi.ufi.domain.flight.service.GvaFlightsSupplier;
 import ch.mobi.ufi.domain.flight.util.FlightCsvMapper;
 import ch.mobi.ufi.domain.flight.vo.FlightIdentifier;
 import ch.mobi.ufi.domain.risk.predictor.DelayEstimator;
 import ch.mobi.ufi.domain.util.CsvMapper;
-import lombok.Builder;
-import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,18 +14,17 @@ import lombok.extern.slf4j.Slf4j;
 import javax.annotation.PostConstruct;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 public class FlightService {
+
+    static final LocalDate FIRST_DAY_OF_ARRIVAL_LOG = LocalDate.of(2018, Month.MAY, 21);
+
+    static final int FLIGHT_COMPENSABLE_DELAY_THRESHOLD = 60;
 
     @NonNull
     private DelayEstimator delayEstimator;
@@ -71,23 +66,20 @@ public class FlightService {
      * TODO schedule a daily call to all suppliers to refresh cache data
      */
     public List<Flight> refreshFlightList() {
-        final LocalDate FIRST_DAY_OF_ARRIVAL_LOG = LocalDate.of(2018, Month.MAY, 21);
-        LocalDate currentDate = FIRST_DAY_OF_ARRIVAL_LOG;
-        List<LocalDate> dates = getDates(currentDate);
+        List<LocalDate> dates = getAllArrivalDays(FIRST_DAY_OF_ARRIVAL_LOG);
         List<Flight> allFlights = provisionFlights(dates);
-        int delayThreshold = 60;
-        initializeDelayEstimator(allFlights, delayThreshold);
+        initializeDelayEstimator(allFlights, FLIGHT_COMPENSABLE_DELAY_THRESHOLD);
         storeFlightsToCSV(allFlights);
         return allFlights;
     }
 
-    private List<LocalDate> getDates(LocalDate currentDate) {
-        List<LocalDate> dates = new ArrayList<>();
+    private List<LocalDate> getAllArrivalDays(LocalDate currentDate) {
+        List<LocalDate> arrivalDates = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            dates.add(currentDate);
+            arrivalDates.add(currentDate);
             currentDate = currentDate.plusDays(1L);
         }
-        return dates;
+        return arrivalDates;
     }
 
     private List<Flight> provisionFlights(List<LocalDate> dates) {
