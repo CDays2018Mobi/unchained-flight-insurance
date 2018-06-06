@@ -18,7 +18,7 @@ public class SwaggerDocumentation {
     @Bean
     public Docket petApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("myOffice API")
+                .groupName("CDays 2018")
                 .apiInfo(apiInfo())
                 .select()
                 .paths(paths())
@@ -26,15 +26,13 @@ public class SwaggerDocumentation {
     }
 
     private Predicate<String> paths() {
-        return regex("/api/hello.*");
+        return regex("/api.*");
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Hello")
-                .description("Hello API")
-                .license("Apache License Version 2.0")
-                .licenseUrl("https://github.com/springfox/springfox/blob/master/LICENSE")
+                .title("Unchained flight insurance")
+                .description("UFI API")
                 .version("1.0")
                 .build();
     }

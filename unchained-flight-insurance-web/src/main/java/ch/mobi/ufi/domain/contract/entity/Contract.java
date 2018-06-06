@@ -10,8 +10,5 @@ import lombok.Data;
 @Builder
 public class Contract {
 	private FlightIdentifier flightIdentifier;
-	/**
-	 * d�lai � attendre pour qu'il y ait une compensation
-	 */
 	private Duration timeToCompensation;
 }

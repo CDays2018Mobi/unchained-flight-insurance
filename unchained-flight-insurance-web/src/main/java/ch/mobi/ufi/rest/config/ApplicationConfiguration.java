@@ -1,8 +1,7 @@
 package ch.mobi.ufi.rest.config;
 
-import ch.mobi.ufi.domain.contract.repository.ContractRepository;
-import ch.mobi.ufi.domain.contract.repository.ContractRepositoryImpl;
 import ch.mobi.ufi.domain.contract.service.ContractService;
+import ch.mobi.ufi.domain.flight.repository.FlightRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,13 +9,12 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationConfiguration {
 
     @Bean
-    public ContractRepository contractRepository() {
-        return new ContractRepositoryImpl();
+    public FlightRepository flightRepository() {
+        return new FlightRepository();
     }
 
     @Bean
     public ContractService contractService() {
-        return new ContractService();
+        return new ContractService(flightRepository());
     }
-
 }

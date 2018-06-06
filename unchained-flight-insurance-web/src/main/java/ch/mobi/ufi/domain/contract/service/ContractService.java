@@ -2,17 +2,19 @@ package ch.mobi.ufi.domain.contract.service;
 
 import ch.mobi.ufi.domain.contract.entity.Contract;
 import ch.mobi.ufi.domain.flight.entity.Flight;
-import ch.mobi.ufi.domain.flight.vo.FlightIdentifier;
 import ch.mobi.ufi.domain.flight.repository.FlightRepository;
+import ch.mobi.ufi.domain.flight.vo.FlightIdentifier;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Duration;
 
 @Slf4j
+@RequiredArgsConstructor
 public class ContractService {
 
-    @Autowired
+    @NonNull
     private FlightRepository flightRepository;
 
     public Contract createContract(FlightIdentifier flightIdentifier, Duration timeToCompensation) {
@@ -31,7 +33,7 @@ public class ContractService {
         // TODO certains vols sont déjà connus comme en avance ou en retard (expectedDate+effectiveDate+pas de status) => il faut tenir compte de l'effectiveDate s'elle  est connu
 
         LOG.info("creating contract for flight number {}: {}", flightIdentifier, timeToCompensation);
-        return  Contract.builder().flightIdentifier(flightIdentifier).timeToCompensation(timeToCompensation).build();
+        return Contract.builder().flightIdentifier(flightIdentifier).timeToCompensation(timeToCompensation).build();
     }
 
     private boolean cannotInsure(Flight flight) {

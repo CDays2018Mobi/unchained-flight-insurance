@@ -35,8 +35,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-@Component
-@Scope(value=ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 public class FlightRepository {
 	@Data
@@ -62,7 +60,7 @@ public class FlightRepository {
 	
 	@PostConstruct
 	public void postConstruct() {
-		refreshFlightList();
+		// refreshFlightList();
 	}
 	
 
