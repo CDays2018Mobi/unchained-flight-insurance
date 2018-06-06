@@ -22,6 +22,10 @@ import java.util.*;
 @RequiredArgsConstructor
 public class FlightService {
 
+    static final LocalDate FIRST_DAY_OF_ARRIVAL_LOG = LocalDate.of(2018, Month.MAY, 21);
+
+    static final int FLIGHT_COMPENSABLE_DELAY_THRESHOLD = 60;
+
     @NonNull
     private DelayEstimator delayEstimator;
     @NonNull
@@ -62,14 +66,9 @@ public class FlightService {
      * TODO schedule a daily call to all suppliers to refresh cache data
      */
     public List<Flight> refreshFlightList() {
-        final LocalDate FIRST_DAY_OF_ARRIVAL_LOG = LocalDate.of(2018, Month.MAY, 21);
         List<LocalDate> dates = getAllArrivalDays(FIRST_DAY_OF_ARRIVAL_LOG);
-
         List<Flight> allFlights = provisionFlights(dates);
-
-        final int FLIGHT_COMPENSABLE_DELAY_THRESHOLD = 60;
         initializeDelayEstimator(allFlights, FLIGHT_COMPENSABLE_DELAY_THRESHOLD);
-
         storeFlightsToCSV(allFlights);
         return allFlights;
     }
