@@ -1,27 +1,37 @@
 <div style="text-align:center">
-  <h1>
+  <h3>
     Subscription form
-  </h1>
+  </h3>
 </div>
 
 <form [formGroup]="form">
 
     <span class="ui-float-label">
-      <input id="flightId" formControlName="flightId" type="text" pInputText>
+      <input id="flightId" formControlName="flightId" type="text" pInputText class="formControl">
       <label for="flightId">Flight id</label>
     </span>
 
+  <br>
+
+  <div align="center">
   <span class="ui-float-label">
-      <p-calendar id="arrivalDate" formControlName="arrivalDate" [showIcon]="true" dateFormat="yy-mm-dd"></p-calendar>
+      <p-calendar id="arrivalDate" formControlName="arrivalDate" [showIcon]="true" dateFormat="yy-mm-dd"
+                  class="formControl"></p-calendar>
       <label for="flightId">Arrival date</label>
     </span>
+  </div>
+
+  <br>
 
   <span class="ui-float-label">
-      <input id="ticketId" formControlName="ticketId" type="text" size="30" pInputText>
+      <input id="ticketId" formControlName="ticketId" type="text" size="30" pInputText class="formControl">
       <label for="flightId">Ticket id</label>
     </span>
 
-  <p-listbox id="guarantee-level" [options]="levels" [style]="{'width':'300px'}">
+  <br>
+
+  <div align="center">
+  <p-listbox id="guarantee-level" [options]="levels" class="formControl">
     <p-header>
       <i class="fa fa-plane"></i>
       Available guarantee levels
@@ -48,11 +58,16 @@
       Description : {{selectedLevel||'none'}}
     </p-footer>
   </p-listbox>
+  </div>
+
+  <br>
 
   <span class="ui-float-label">
-      <input id="email" formControlName="email" type="text" size="30" pInputText>
+      <input id="email" formControlName="email" type="text" pInputText class="formControl">
       <label for="flightId">Email</label>
     </span>
+
+  <br>
 
   <p-button icon="fa fa-fw fa-check" iconPos="right" label="Subscribe" [disabled]="form.invalid" (click)="submit()"></p-button>
 
