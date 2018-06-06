@@ -14,8 +14,8 @@ export class SubscriptionComponent implements OnInit {
   constructor() {
     this.levels = [
       {label:'Basic', value:'Basic'},
-      {label:'Classical', value:'Classical'},
-      {label:'Comfort', value:'Comfort'}
+      {label:'Medium', value:'Medium'},
+      {label:'Ultimate', value:'Ultimate'}
     ];
   }
 

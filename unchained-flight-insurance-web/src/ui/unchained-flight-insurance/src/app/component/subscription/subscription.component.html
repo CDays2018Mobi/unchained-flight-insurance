@@ -16,22 +16,21 @@
     <label for="ticket-number">Ticket number</label>
 </span>
 <span class="ui-float-label">
-  <p-listbox id="guarantee-level" [options]="levels" [style]="{'width':'190px'}">
+  <p-listbox id="guarantee-level" [options]="levels" [style]="{'width':'300px'}">
     <p-header>
-      <i class="fa fa-car"></i>
-      List of Car
+      <i class="fa fa-plane"></i>
+      Available guarantee levels
     </p-header>
-    <ng-template let-car let-i="index" pTemplate="item">
+    <ng-template let-level let-i="index" pTemplate="item">
         <div class="ui-helper-clearfix">
-            <img src="assets/showcase/images/demo/car/{{car.label}}.png" style="display:inline-block;margin:5px 0 0 5px" width="48">
-            <span style="float:right;margin:20px 10px 0 0">{{i}} - {{car.value}}</span>
+            <img src="assets/img/level/{{level.label}}.png" style="display:inline-block;margin:5px 0 0 5px" width="48">
+            <span style="float:right;margin:20px 10px 0 0">{{i}} - {{level.value}}</span>
         </div>
     </ng-template>
     <p-footer>
-        Selected: {{selectedLevel||'none'}}
+        Description : {{selectedLevel||'none'}}
     </p-footer>
 </p-listbox>
-    <label for="guarantee-level">Guarantee level</label>
 </span>
 <span class="ui-float-label">
     <input id="email" type="text" size="30" pInputText>
