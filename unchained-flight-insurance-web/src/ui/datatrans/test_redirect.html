@@ -1,15 +1,20 @@
-Salut Didier.
+<html>
+<head>
+	<title>Test redirect</title>
+</head>
+<body>
+
+<h1>Test redirect</h1>
 
 <a href="https://pilot.datatrans.biz/upp/jsp/upStart.jsp
 			?merchantId=1100004624
 			&refno=1337
-			&amount={{price}}
+			&amount=1000
 			&currency=CHF
 			&paymentmethod=ECA
 			&paymentmethod=VIS
 			&theme=DT2015
 			&successUrl=http://localhost:9000/api/v1/billing/payed
-			&cancelUrl=http://localhost:9000/api/v1/billing/cancelled">
-
-  <p-button icon="fa fa-fw fa-check" iconPos="right" label="Pay"></p-button>
-</a>
+			&cancelUrl=http://localhost:9000/api/v1/billing/cancelled">Pay</a>
+</body>
+</html>

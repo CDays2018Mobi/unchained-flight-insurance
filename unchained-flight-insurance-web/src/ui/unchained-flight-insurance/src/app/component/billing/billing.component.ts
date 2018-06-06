@@ -12,4 +12,8 @@ export class BillingComponent implements OnInit {
   ngOnInit() {
   }
 
+  get price() {
+    return 50000;
+  }
+
 }
