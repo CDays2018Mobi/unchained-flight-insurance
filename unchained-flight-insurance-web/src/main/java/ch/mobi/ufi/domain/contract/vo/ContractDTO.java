@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ContractDTO {
     @NotNull
-    private String flightNumber;
+    private String flightId;
     @NotNull
     private LocalDate arrivalDate;
 }

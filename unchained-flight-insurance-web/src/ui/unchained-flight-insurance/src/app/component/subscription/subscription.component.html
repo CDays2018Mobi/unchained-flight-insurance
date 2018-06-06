@@ -11,7 +11,7 @@
     <label for="flightId">Flight id</label>
 </span>
 <span class="ui-float-label">
-  <p-calendar id="arrivalDate" formControlName="arrivalDate" [showIcon]="true"></p-calendar>
+  <p-calendar id="arrivalDate" formControlName="arrivalDate" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
   <label for="arrivalDate">Arrival date</label>
 </span>
 <span class="ui-float-label">
@@ -39,6 +39,6 @@
     <input id="email" formControlName="email" type="text" size="30" pInputText>
     <label for="email">Email</label>
 </span>
-<p-button icon="fa fa-fw fa-check" iconPos="right" label="Subscribe" (click)="submit()"></p-button>
+<p-button icon="fa fa-fw fa-check" iconPos="right" label="Subscribe" [disabled]="form.invalid" (click)="submit()"></p-button>
 
 </form>
