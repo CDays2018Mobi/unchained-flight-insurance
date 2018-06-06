@@ -78,3 +78,6 @@ hs_err_pid*
 
 /unchained-flight-insurance-web/src/main/resources/static/
 /.project
+src/main/java/ch/mobi/ufi/domain/pricing/
+/unchained-flight-insurance.iml
+unchained-flight-insurance-web/src/main/java/ch/mobi/ufi/domain/pricing/
