@@ -3,17 +3,20 @@
     Subscription form
   </h1>
 </div>
+
+<form [formGroup]="form">
+
 <span class="ui-float-label">
-    <input id="flight-number" type="text" size="30" pInputText>
-    <label for="flight-number">Flight number</label>
+    <input id="flightId" formControlName="flightId" type="text" size="30" pInputText>
+    <label for="flightId">Flight id</label>
 </span>
 <span class="ui-float-label">
-  <p-calendar id="arrival-date" [showIcon]="true"></p-calendar>
-  <label for="arrival-date">Arrival date</label>
+  <p-calendar id="arrivalDate" formControlName="arrivalDate" [showIcon]="true"></p-calendar>
+  <label for="arrivalDate">Arrival date</label>
 </span>
 <span class="ui-float-label">
-    <input id="ticket-number" type="text" size="30" pInputText>
-    <label for="ticket-number">Ticket number</label>
+    <input id="ticketId" formControlName="ticketId" type="text" size="30" pInputText>
+    <label for="ticketId">Ticket id</label>
 </span>
 <span class="ui-float-label">
   <p-listbox id="guarantee-level" [options]="levels" [style]="{'width':'300px'}">
@@ -33,7 +36,9 @@
 </p-listbox>
 </span>
 <span class="ui-float-label">
-    <input id="email" type="text" size="30" pInputText>
+    <input id="email" formControlName="email" type="text" size="30" pInputText>
     <label for="email">Email</label>
 </span>
-<p-button icon="fa fa-fw fa-check" iconPos="right" label="Subscribe"></p-button>
+<p-button icon="fa fa-fw fa-check" iconPos="right" label="Subscribe" (click)="submit()"></p-button>
+
+</form>

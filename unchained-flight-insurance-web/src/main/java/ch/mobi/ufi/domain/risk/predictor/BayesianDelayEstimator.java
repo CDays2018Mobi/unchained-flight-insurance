@@ -18,8 +18,6 @@ import ch.mobi.ufi.domain.flight.entity.Flight;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Component
-@Scope(value=ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 public class BayesianDelayEstimator implements DelayEstimator {
 	@AllArgsConstructor
