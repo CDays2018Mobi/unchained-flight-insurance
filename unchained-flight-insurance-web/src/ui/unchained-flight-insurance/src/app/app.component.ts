@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {ContractService} from "./service/contract.service";
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'the Unchained Flight Insurance App';
+
+  constructor(private contractService: ContractService) {
+  }
 }
