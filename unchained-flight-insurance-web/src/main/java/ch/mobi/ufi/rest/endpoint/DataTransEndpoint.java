@@ -20,12 +20,12 @@ public class DataTransEndpoint {
 
     @PostMapping("/cancelled")
     public ModelAndView cancelled() {
-        return new ModelAndView("redirect:/index.html", Collections.emptyMap());
+        return new ModelAndView("redirect:/billing/succeeded", Collections.emptyMap());
     }
 
     @PostMapping("/payed")
     public ModelAndView payed() {
-        return new ModelAndView("redirect:/index.html", Collections.emptyMap());
+        return new ModelAndView("redirect:/billing/succeeded", Collections.emptyMap());
     }
 }
 

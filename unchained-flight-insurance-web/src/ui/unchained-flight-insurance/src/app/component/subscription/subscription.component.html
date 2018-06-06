@@ -1,74 +1,48 @@
-<div style="text-align:center">
-  <h3>
-    Subscription form
-  </h3>
-</div>
+<p-card title="Delayed flight insurance" subtitle="Subscription">
 
-<form [formGroup]="form">
+  <form [formGroup]="form">
 
-    <span class="ui-float-label">
-      <input id="flightId" formControlName="flightId" type="text" pInputText class="formControl">
-      <label for="flightId">Flight id</label>
-    </span>
+    <div class="ui-inputgroup">
+      <span class="ui-inputgroup-addon"><i class="fa fa-plane"></i></span>
+      <input formControlName="flightId" type="text" pInputText placeholder="Flight id">
+    </div>
+    <div class="ui-inputgroup">
+      <span class="ui-inputgroup-addon"><i class="fa fa-calendar"></i></span>
+      <p-calendar formControlName="arrivalDate" [showIcon]="true" dateFormat="yy-mm-dd"
+                  placeholder="Arrival date"></p-calendar>
+    </div>
+    <div class="ui-inputgroup">
+      <span class="ui-inputgroup-addon"><i class="fa fa-ticket"></i></span>
+      <input formControlName="ticketId" type="text" pInputText placeholder="Ticket id">
+    </div>
 
-  <br>
+    <br>
 
-  <div align="center">
-  <span class="ui-float-label">
-      <p-calendar id="arrivalDate" formControlName="arrivalDate" [showIcon]="true" dateFormat="yy-mm-dd"
-                  class="formControl"></p-calendar>
-      <label for="flightId">Arrival date</label>
-    </span>
-  </div>
+    <div>
+      <p-listbox [options]="coverageLevels" formControlName="coverageLevel">
+        <ng-template let-level let-i="index" pTemplate="item">
+          <table cellspacing="10">
+            <tr>
+              <td><img src="assets/img/level/{{level.label}}.png" height="50"></td>
+              <td><strong>{{level.label}}</strong>
+                <br>Insured amount CHF {{level.value.insuredAmount}}
+                <br>Premium amount CHF {{level.value.premiumAmount}}</td>
+            </tr>
+          </table>
+        </ng-template>
+      </p-listbox>
+    </div>
 
-  <br>
+    <br>
 
-  <span class="ui-float-label">
-      <input id="ticketId" formControlName="ticketId" type="text" size="30" pInputText class="formControl">
-      <label for="flightId">Ticket id</label>
-    </span>
+    <div class="ui-inputgroup">
+      <span class="ui-inputgroup-addon"><i class="fa fa-envelope"></i></span>
+      <input formControlName="email" type="email" pInputText placeholder="Email address">
+    </div>
+  </form>
 
-  <br>
+  <p-footer>
+    <button pButton type="button" label="Pay" icon="fa fa-check" [disabled]="form.invalid" (click)="submit()"></button>
+  </p-footer>
 
-  <div align="center">
-  <p-listbox id="guarantee-level" [options]="levels" class="formControl">
-    <p-header>
-      <i class="fa fa-plane"></i>
-      Available guarantee levels
-    </p-header>
-    <ng-template let-level let-i="index" pTemplate="item">
-      <div class="ui-helper-clearfix">
-        <table>
-          <tr>
-            <td>
-              <img src="assets/img/level/{{level.label}}.png" height="50">
-            </td>
-            <td>
-              <span>
-                {{level.value}}
-                <br>CHF 10'000
-                <br>CHF 20.00
-              </span>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </ng-template>
-    <p-footer>
-      Description : {{selectedLevel||'none'}}
-    </p-footer>
-  </p-listbox>
-  </div>
-
-  <br>
-
-  <span class="ui-float-label">
-      <input id="email" formControlName="email" type="text" pInputText class="formControl">
-      <label for="flightId">Email</label>
-    </span>
-
-  <br>
-
-  <p-button icon="fa fa-fw fa-check" iconPos="right" label="Subscribe" [disabled]="form.invalid" (click)="submit()"></p-button>
-
-</form>
+</p-card>

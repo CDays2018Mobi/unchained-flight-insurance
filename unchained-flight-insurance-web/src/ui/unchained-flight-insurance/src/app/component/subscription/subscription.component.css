@@ -1,0 +1,9 @@
+/deep/ .ui-listbox {
+  padding: .25em;
+  width: 100%;
+}
+
+/deep/ .ui-inputtext {
+  padding-left: .5em;
+  width: 100%;
+}
