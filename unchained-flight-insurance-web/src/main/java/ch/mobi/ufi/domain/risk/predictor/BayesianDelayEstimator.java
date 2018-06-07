@@ -50,6 +50,13 @@ public class BayesianDelayEstimator implements DelayEstimator {
 	ProbabilityMap<String> countPerAllDimension = new ProbabilityMap<String>();
 	int validFlightCount=0;
 
+	List<Dimension> dimensions = Arrays.asList(
+			new Dimension("companyName", f->f.getAirline().getCompanyName()),
+			new Dimension("expectedArrivalHour", f->mapHour(f.getExpectedArrivalDate().getHour())),
+			//new Dimension("startingAirport", f->f.getStartingAirport()), // on ne peut pas tenir compte de l'aéroport de départ car ce n'est pas une variable indépendante du triplet companyName/expectedArrivalHour/arrivalDayOfWeek
+			new Dimension("expectedArrivalDayOfWeek", f->f.getExpectedArrivalDate().getDayOfWeek()));
+	Dimension variable;
+	List<Integer> flightDelayThresholds;
 	
 	public String mapHour(int hour) {
 		if (hour<=11) {
@@ -62,14 +69,6 @@ public class BayesianDelayEstimator implements DelayEstimator {
 			return "20-23";
 		}
 	}
-	
-	List<Dimension> dimensions = Arrays.asList(
-			new Dimension("companyName", f->f.getAirline().getCompanyName()),
-			new Dimension("expectedArrivalHour", f->mapHour(f.getExpectedArrivalDate().getHour())),
-			//new Dimension("startingAirport", f->f.getStartingAirport()), // on ne peut pas tenir compte de l'aéroport de départ car ce n'est pas une variable indépendante du triplet companyName/expectedArrivalHour/arrivalDayOfWeek
-			new Dimension("expectedArrivalDayOfWeek", f->f.getExpectedArrivalDate().getDayOfWeek()));
-	Dimension variable;
-	List<Integer> flightDelayThresholds;
 	
 	/**
 	 * Détermine le seuil à utiliser,
@@ -147,7 +146,7 @@ public class BayesianDelayEstimator implements DelayEstimator {
 			LOG.info("p({})={}", key, countPerAllDimension.getProbability(key));
 		}
 		
-		// validation
+		// validation/simulation
 		// Note: on calcule la probabilité de retard sur chaque vol de l'ensemble 
 		// d'apprentissage. Ce faisant, on tord un peu le système (car le vol de 
 		// l'ensemble de test est aussi dans l'ensemble d'apprentissage, mais
