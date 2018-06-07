@@ -117,9 +117,13 @@ public class GvaFlightsSupplier implements FlightsSupplier {
                         //.header("Cookie", "ASP.NET_SessionId=tetp5w0odszc1mkelfw05ovw; BT_ctst=; BT_sdc=eyJldF9jb2lkIjoiNTU1ZWMxMzcwYmQyMGI5YzdiODJiZjUyNmFmYWU2MjciLCJyZnIiOiIiLCJ0aW1lIjoxNTI2ODI3NTA2MzkwLCJwaSI6NCwicmV0dXJuaW5nIjowLCJldGNjX2NtcCI6Ik5BIn0%3D; BT_pdc=eyJldGNjX2N1c3QiOjAsImVjX29yZGVyIjowLCJldGNjX25ld3NsZXR0ZXIiOjB9; nmstat=1526827553010; _ga=GA1.2.1106959508.1526827508; _gid=GA1.2.1224295352.1526827508; noWS_nQx2oE=true; _et_coid=555ec1370bd20b9c7b82bf526afae627")
                         .get();
                 // content not yet cached => cache it
-                PrintWriter out = new PrintWriter(new File(FLIGHTCACHE_DIRECTORY, CACHED_FILENAME_PREFIX + params.getDate().toString() + "_" + System.currentTimeMillis() + ".html"));
-                out.println(doc.html());
-                out.close();
+                try (PrintWriter out = new PrintWriter(new File(FLIGHTCACHE_DIRECTORY, CACHED_FILENAME_PREFIX + params.getDate().toString() + "_" + System.currentTimeMillis() + ".html"))) {
+                    out.println(doc.html());
+                    out.close();
+                } catch (IOException e) {
+                	// TODO gérer l'exception proprement
+                	e.printStackTrace();
+                }
             }
 
             String dateString = doc.select("h2").text(); // div[class=titlein]
