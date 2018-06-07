@@ -1,4 +1,4 @@
-<p-card title="Delayed flight insurance" subtitle="Subscription" styleClass="transparent">
+<p-card title="Delayed flight insurance" subtitle="Subscribe your flight insurance in a minute!" styleClass="transparent">
 
   <form [formGroup]="form">
 
@@ -16,8 +16,7 @@
       <input formControlName="ticketId" type="text" pInputText placeholder="Ticket id">
     </div>
 
-    <br>
-
+    <p-card subtitle="How much is your time worth?" styleClass="transparent">
     <div>
       <p-listbox [options]="riskCoverageItems" formControlName="riskCoverage">
         <ng-template let-level let-i="index" pTemplate="item">
@@ -32,6 +31,7 @@
         </ng-template>
       </p-listbox>
     </div>
+    </p-card>
 
     <br>
 

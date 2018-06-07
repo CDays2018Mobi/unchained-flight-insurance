@@ -10,8 +10,10 @@
 body {
   background-repeat: no-repeat;
   background-size: cover;
+  color: white;
 }
 
 .transparent {
   background-color: transparent;
+  color: white;
 }
