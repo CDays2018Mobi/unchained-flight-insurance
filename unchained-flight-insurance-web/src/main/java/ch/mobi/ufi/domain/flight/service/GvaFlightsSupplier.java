@@ -1,16 +1,5 @@
 package ch.mobi.ufi.domain.flight.service;
 
-import ch.mobi.ufi.domain.flight.entity.Airline;
-import ch.mobi.ufi.domain.flight.entity.Flight;
-import ch.mobi.ufi.domain.flight.parameters.DefaultFlightParameters;
-import ch.mobi.ufi.domain.flight.parameters.FlightParameters;
-import ch.mobi.ufi.domain.flight.vo.FlightStatus;
-import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,15 +8,39 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
+
+import ch.mobi.ufi.domain.flight.entity.Airline;
+import ch.mobi.ufi.domain.flight.entity.Flight;
+import ch.mobi.ufi.domain.flight.parameters.DefaultFlightParameters;
+import ch.mobi.ufi.domain.flight.parameters.FlightParameters;
+import ch.mobi.ufi.domain.flight.vo.FlightStatus;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class GvaFlightsSupplier implements FlightsSupplier {
-    private static final File FLIGHTCACHE_DIRECTORY = new File("./flightcache");
+    private static final File FLIGHTCACHE_DIRECTORY = new File("./src/main/resources/flightcache");
+    {
+    	LOG.info("flightcache directory for storing = {}", FLIGHTCACHE_DIRECTORY.getAbsolutePath());
+    }
     private static final String CACHED_FILENAME_PREFIX = "gva_";
     private static final String API_URL = "http://gva.ch/ajax/ArrivalDepartureSearch.aspx?type=A&day={day}&lang=2&time=0000&nline=1000&offset=0&_={timestamp}";
+	private ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 
     @Override
     public List<Flight> getFlights(FlightParameters flightParameters) {
@@ -43,7 +56,29 @@ public class GvaFlightsSupplier implements FlightsSupplier {
             return flights;
         } else if (dayParam < -1) {
             // service has no data before yesterday => use cached data
-            File[] files = FLIGHTCACHE_DIRECTORY.listFiles(file -> file.getName().startsWith(CACHED_FILENAME_PREFIX + params.getDate()));
+        	Resource[] resources;
+        	File[] files;
+    		try {
+    			resources = resolver.getResources("classpath*:/flightcache/"+CACHED_FILENAME_PREFIX + params.getDate()+"*.html");
+    			files = Arrays.stream(resources).map(r->{
+					try {
+						return r.getFile();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						return null;
+					}
+				}).collect(Collectors.toList()).toArray(new File[resources.length]);
+    	    	for (Resource resource: resources){
+    	    	    LOG.info(resource.getFilename()+" "+resource.getFile());
+    	    	}
+        	} catch (IOException e1) {
+    			// TODO Auto-generated catch block
+    			e1.printStackTrace();
+    			return flights;
+			}
+
+            //File[] files = FLIGHTCACHE_DIRECTORY.listFiles(file -> file.getName().startsWith(CACHED_FILENAME_PREFIX + params.getDate()));
             if (files.length == 0) {
                 // no cached data => no flights
                 return flights;
