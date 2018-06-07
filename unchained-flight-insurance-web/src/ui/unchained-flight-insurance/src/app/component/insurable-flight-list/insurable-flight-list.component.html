@@ -7,12 +7,22 @@
       <th>Premium estimation</th>
     </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-flight>
+  <ng-template pTemplate="body" let-item>
     <tr>
-      <td>{{flight.flightId}}</td>
-      <td>{{flight.status}}</td>
-      <td>{{flight.delayProbability}}</td>
-      <td>{{flight.premiumAmount[0]}}</td>
+      <td>{{item.flight.flightId}}</td>
+      <td>{{item.flight.status}}</td>
+      <td>{{item.delayProbability}}</td>
+      <td>
+        <span [ngStyle]="{'color': (item.riskCoverages[0].available ? 'green' : 'black')}">
+          {{item.riskCoverages[0].premiumAmount}}
+        </span>
+        <span [ngStyle]="{'color': (item.riskCoverages[1].available ? 'green' : 'black')}">
+          / {{item.riskCoverages[1].premiumAmount}}
+        </span>
+        <span [ngStyle]="{'color': (item.riskCoverages[2].available ? 'green' : 'black')}">
+          / {{item.riskCoverages[2].premiumAmount}}
+        </span>
+      </td>
     </tr>
   </ng-template>
 </p-table>
