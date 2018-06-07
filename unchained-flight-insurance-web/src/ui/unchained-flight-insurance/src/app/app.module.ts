@@ -22,6 +22,7 @@ import {MessagesModule} from 'primeng/messages';
 import { InsurableFlightListComponent } from './component/insurable-flight-list/insurable-flight-list.component';
 import { FinancialMovementListComponent } from './component/financial-movement-list/financial-movement-list.component';
 import {TableModule} from 'primeng/table';
+import {FlightClient} from './service/flight-client.service';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,7 @@ import {TableModule} from 'primeng/table';
     ProgressSpinnerModule,
     AppRoutingModule
   ],
-  providers: [ContractClient, RiskClient, NotifierService, MessageService],
+  providers: [ContractClient, RiskClient, NotifierService, MessageService, FlightClient],
   bootstrap: [AppComponent]
 })
 export class AppModule {
