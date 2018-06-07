@@ -48,7 +48,7 @@ public class PricingCalculator {
 				.premiumAmount(premiumAmount)
 				.available(
 						flight.getFlightStatus()==null &&
-						flight.getExpectedArrivalDate().isBefore(LocalDateTime.now()) &&
+						flight.getExpectedArrivalDate().isAfter(LocalDateTime.now()) &&
 						premiumAmount<insuredAmount)
 				.build();
 	}

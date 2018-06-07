@@ -67,7 +67,7 @@ public class FlightEndpoint {
     	List<InsurableFlight> insurableFlights = flights.stream()
     			.map(f->InsurableFlight.builder()
     					.flight(f)
-    					.delayProbability(Math.round(delayEstimator.computeProbabilityOfBeingDelayed(f, minDelay)*100)/100)
+    					.delayProbability(Math.round(delayEstimator.computeProbabilityOfBeingDelayed(f, minDelay)*100d)/100d)
     					.riskCoverages(pricingCalculator.getRiskCoverages(f, minDelay))
     					.build())
     			.collect(Collectors.toList());
