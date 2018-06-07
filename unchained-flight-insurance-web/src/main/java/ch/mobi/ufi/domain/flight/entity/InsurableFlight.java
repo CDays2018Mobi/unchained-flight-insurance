@@ -10,6 +10,10 @@ import lombok.Data;
 @Builder
 public class InsurableFlight {
 	private Flight flight;
+	/**
+	 * Probability that the flight arrive late (late=e.g. more than one hour delay).
+	 * Varies from 0 (0%) to 1 (100%).
+	 */
 	private double delayProbability;
 	private List<RiskCoverage> riskCoverages;
 }

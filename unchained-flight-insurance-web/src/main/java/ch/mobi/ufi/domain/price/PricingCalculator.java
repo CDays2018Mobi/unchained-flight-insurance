@@ -55,7 +55,7 @@ public class PricingCalculator {
 	
 	private double calculatePremiumAmount(Flight flight, Integer minDelay, int insuredAmount) {
 		double delayProbability = delayEstimator.computeProbabilityOfBeingDelayed(flight, minDelay);
-		return insuredAmount*(delayProbability*K+M1)+M2;
+		return Math.round(insuredAmount*(delayProbability*K+M1)+M2);
 	}
 		
 }
