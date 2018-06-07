@@ -1,4 +1,5 @@
-<p-table [value]="insurableFlights">
+<p-card title="Insurable flights overview" subtitle="Real time information">
+<p-table [value]="insurableFlights$|async">
   <ng-template pTemplate="header">
     <tr>
       <th>Flight id</th>
@@ -11,18 +12,25 @@
     <tr>
       <td>{{item.flight.flightId}}</td>
       <td>{{item.flight.status}}</td>
-      <td>{{item.delayProbability}}</td>
+      <td>{{item.delayProbability * 100}} %</td>
       <td>
-        <span [ngStyle]="{'color': (item.riskCoverages[0].available ? 'green' : 'black')}">
+        <span [ngStyle]="{'color': (item.riskCoverages[0].available ? 'green' : 'black'),
+                          'font-weight': (item.riskCoverages[0].available ? 'bold' : 'normal')
+                          }">
           {{item.riskCoverages[0].premiumAmount}}
         </span>
-        <span [ngStyle]="{'color': (item.riskCoverages[1].available ? 'green' : 'black')}">
+        <span [ngStyle]="{'color': (item.riskCoverages[1].available ? 'green' : 'black'),
+                        'font-weight': (item.riskCoverages[1].available ? 'bold' : 'normal')
+                        }">
           / {{item.riskCoverages[1].premiumAmount}}
         </span>
-        <span [ngStyle]="{'color': (item.riskCoverages[2].available ? 'green' : 'black')}">
+        <span [ngStyle]="{'color': (item.riskCoverages[2].available ? 'green' : 'black'),
+                          'font-weight': (item.riskCoverages[2].available ? 'bold' : 'normal')
+                          }">
           / {{item.riskCoverages[2].premiumAmount}}
         </span>
       </td>
     </tr>
   </ng-template>
 </p-table>
+</p-card>

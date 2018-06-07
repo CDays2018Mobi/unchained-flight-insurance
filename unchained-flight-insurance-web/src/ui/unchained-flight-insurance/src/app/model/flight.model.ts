@@ -1,6 +1,6 @@
 import {RiskCoverage} from './coverage.model';
 
-type FlightStatus = 'On time'|'Delayed'|'Canceled';
+type FlightStatus = 'On time' | 'Delayed' | 'Canceled';
 
 export class Flight {
   constructor(public flightId: string,
