@@ -19,12 +19,17 @@ import {NotifierService} from './service/notifier-service';
 import {AppRoutingModule} from './app-routing.module';
 import {MessageService} from "primeng/components/common/messageservice";
 import {MessagesModule} from 'primeng/messages';
+import { InsurableFlightListComponent } from './component/insurable-flight-list/insurable-flight-list.component';
+import { FinancialMovementListComponent } from './component/financial-movement-list/financial-movement-list.component';
+import {TableModule} from 'primeng/table';
 
 @NgModule({
   declarations: [
     AppComponent,
     SubscriptionComponent,
     SubscriptionConfirmationComponent,
+    InsurableFlightListComponent,
+    FinancialMovementListComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,6 +39,7 @@ import {MessagesModule} from 'primeng/messages';
     DropdownModule,
     CalendarModule,
     ListboxModule,
+    TableModule,
     HttpClientModule,
     InputTextModule,
     CardModule,
