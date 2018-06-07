@@ -23,9 +23,9 @@ public class PricingCalculator {
 	
 	public List<RiskCoverage> getRiskCoverages(Flight flight, Integer minDelay) {
 		List<RiskCoverage> riskCoverages = new ArrayList<>();
-		riskCoverages.add(buildRiskCoverage(flight, minDelay, "Basic",      500));
-		riskCoverages.add(buildRiskCoverage(flight, minDelay, "Medium",   2_000));
-		riskCoverages.add(buildRiskCoverage(flight, minDelay, "Ultimate", 8_000));
+		riskCoverages.add(buildRiskCoverage(flight, minDelay, "Bronze",   500));
+		riskCoverages.add(buildRiskCoverage(flight, minDelay, "Silver", 2_000));
+		riskCoverages.add(buildRiskCoverage(flight, minDelay, "Gold",   8_000));
 		LOG.info("coverage for {}, minDelay={}: {}", flight, minDelay, riskCoverages);
 		return riskCoverages;
 	}
