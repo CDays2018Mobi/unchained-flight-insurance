@@ -1,16 +1,16 @@
 package ch.mobi.ufi.rest.endpoint;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import java.util.Collections;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Collections;
-
-import static org.springframework.http.ResponseEntity.ok;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @CrossOrigin
@@ -19,13 +19,13 @@ import static org.springframework.http.ResponseEntity.ok;
 public class DataTransEndpoint {
 
     @PostMapping("/cancelled")
-    public ModelAndView cancelled() {
-        return new ModelAndView("redirect:/billing/succeeded", Collections.emptyMap());
+    public ModelAndView cancelled(HttpServletRequest request) {
+        return new ModelAndView("redirect:/billing/cancelled?" + request.getQueryString(), Collections.emptyMap());
     }
 
     @PostMapping("/payed")
-    public ModelAndView payed() {
-        return new ModelAndView("redirect:/billing/succeeded", Collections.emptyMap());
+    public ModelAndView payed(HttpServletRequest request) {
+        return new ModelAndView("redirect:/billing/succeeded?" + request.getQueryString(), Collections.emptyMap());
     }
 }
 
