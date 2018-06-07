@@ -15,13 +15,12 @@ export class RiskClient {
   }
 
   getRiskCoverages$(flightNumber: string, arrivalDate: string): Observable<RiskCoverage[]> {
-    return Observable.of([
+    /*return Observable.of([
       new RiskCoverage('Bronze', 250, 10, true),
       new RiskCoverage('Silver', 500, 20, true),
       new RiskCoverage('Gold', 10000, 100, true)
-    ]);/*
-    return this.http.get<RiskCoverage[]>(`${this.url}/coverages?flightNumber=${flightNumber}&arrivalDate=${isoDate}`);
-  */
+    ]);*/
+    return this.http.get<RiskCoverage[]>(`${this.url}/coverages?flightNumber=${flightNumber}&arrivalDate=${arrivalDate}`);
   }
 
 }

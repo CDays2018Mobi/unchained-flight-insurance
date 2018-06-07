@@ -4,7 +4,7 @@ type FlightStatus = 'On time' | 'Delayed' | 'Canceled';
 
 export class Flight {
   constructor(public flightId: string,
-              public arrivalDate: string,
+              public expectedArrivalDate: string,
               public status ?: FlightStatus) {
   }
 }

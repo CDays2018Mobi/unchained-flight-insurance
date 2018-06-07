@@ -33,7 +33,8 @@ import ch.mobi.ufi.domain.flight.vo.FlightStatus;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class GvaFlightsSupplier implements FlightsSupplier {
+public class
+GvaFlightsSupplier implements FlightsSupplier {
     private static final File FLIGHTCACHE_DIRECTORY = new File("./src/main/resources/flightcache");
     {
     	LOG.info("flightcache directory for storing = {}", FLIGHTCACHE_DIRECTORY.getAbsolutePath());

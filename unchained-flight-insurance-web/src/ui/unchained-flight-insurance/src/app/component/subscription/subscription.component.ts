@@ -47,8 +47,8 @@ export class SubscriptionComponent implements OnInit {
   flightChanged() {
     const flight = this.currentFlight();
 
-    if (flight.flightId && flight.arrivalDate) {
-      this.riskClient.getRiskCoverages$(flight.flightId, flight.arrivalDate).subscribe(coverages => {
+    if (flight.flightId && flight.expectedArrivalDate) {
+      this.riskClient.getRiskCoverages$(flight.flightId, flight.expectedArrivalDate).subscribe(coverages => {
         this.riskCoverageItems = coverages.map(coverage => {
           return <SelectItem>{label: coverage.name, value: coverage}
         });
@@ -61,7 +61,7 @@ export class SubscriptionComponent implements OnInit {
   submit() {
     const flight: Flight = this.currentFlight();
     const coverage: RiskCoverage = this.currentRiskCoverage();
-    const contract = new Contract(flight.flightId, flight.arrivalDate);
+    const contract = new Contract(flight.flightId, flight.expectedArrivalDate);
 
     window.location.href =
       'https://pilot.datatrans.biz/upp/jsp/upStart.jsp' +

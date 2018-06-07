@@ -17,20 +17,21 @@
     </div>
 
     <p-card subtitle="How much is your time worth?" styleClass="transparent">
-    <div>
-      <p-listbox [options]="riskCoverageItems" formControlName="riskCoverage">
-        <ng-template let-level let-i="index" pTemplate="item">
-          <table cellspacing="10">
-            <tr>
-              <td><img src="assets/img/level/{{level.label}}.png" height="50"></td>
-              <td><strong>{{level.label}}</strong>
-                <br>Insured amount CHF {{level.value.insuredAmount}}
-                <br>Premium amount CHF {{level.value.premiumAmount}}</td>
-            </tr>
-          </table>
-        </ng-template>
-      </p-listbox>
-    </div>
+      <div>
+        <p-listbox [options]="riskCoverageItems" formControlName="riskCoverage">
+          <ng-template let-level let-i="index" pTemplate="item">
+            <table cellspacing="10">
+              <tr>
+                <td><img src="assets/img/level/{{level.label}}.png" height="50"></td>
+                <td><strong>{{level.label}}</strong>
+                  <br>Insured amount CHF {{level.value.insuredAmount}}
+                  <br>Premium amount CHF {{level.value.premiumAmount}}
+                </td>
+              </tr>
+            </table>
+          </ng-template>
+        </p-listbox>
+      </div>
     </p-card>
 
     <br>
