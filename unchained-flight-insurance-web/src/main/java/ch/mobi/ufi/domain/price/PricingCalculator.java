@@ -2,9 +2,12 @@ package ch.mobi.ufi.domain.price;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ch.mobi.ufi.domain.flight.entity.Flight;
+import ch.mobi.ufi.domain.flight.vo.FlightIdentifier;
 import ch.mobi.ufi.domain.risk.predictor.DelayEstimator;
 import ch.mobi.ufi.domain.risk.predictor.RiskCoverage;
 import lombok.NonNull;
@@ -17,6 +20,7 @@ public class PricingCalculator {
 	private static final double K = 1.1;
 	private static final double M1 = 0.1;
 	private static final double M2 = 5;
+	private Map<FlightIdentifier, Double> adaptiveM2 = new HashMap<>();
 	
 	@NonNull
 	private DelayEstimator delayEstimator;
@@ -55,7 +59,11 @@ public class PricingCalculator {
 	
 	private double calculatePremiumAmount(Flight flight, Integer minDelay, int insuredAmount) {
 		double delayProbability = delayEstimator.computeProbabilityOfBeingDelayed(flight, minDelay);
-		return Math.round(insuredAmount*(delayProbability*K+M1)+M2);
+		return Math.round(insuredAmount*(delayProbability*K+M1)+M2+adaptiveM2.getOrDefault(flight.getFlightIdentifier(), 0d));
+	}
+
+	public void updateParameters(FlightIdentifier flightIdentifier, int insuredContractCount) {
+		adaptiveM2.put(flightIdentifier, 10d*insuredContractCount);
 	}
 		
 }

@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+import ch.mobi.ufi.domain.flight.vo.FlightIdentifier;
 import ch.mobi.ufi.domain.flight.vo.FlightStatus;
 import lombok.Builder;
 import lombok.Data;
@@ -30,5 +31,16 @@ public class Flight {
 	public Long getEffectiveDelay() {
 		return getEffectiveArrivalDate()!=null?
 				ChronoUnit.MINUTES.between(getExpectedArrivalDate(), getEffectiveArrivalDate()):null;
+	}
+
+	/**
+	 * Returns the flight identifier. Constructed based on flightNumber and expectedArrivalDate.
+	 * @return
+	 */
+	public FlightIdentifier getFlightIdentifier() {
+		return FlightIdentifier.builder()
+				.flightNumber(getFlightNumber())
+				.flightArrivalDate(getExpectedArrivalDate().toLocalDate())
+				.build();
 	}
 }

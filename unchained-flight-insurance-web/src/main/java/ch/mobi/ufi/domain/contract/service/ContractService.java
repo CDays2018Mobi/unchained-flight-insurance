@@ -1,5 +1,12 @@
 package ch.mobi.ufi.domain.contract.service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import ch.mobi.ufi.domain.contract.entity.Contract;
 import ch.mobi.ufi.domain.contract.repository.ContractRepository;
 import ch.mobi.ufi.domain.finance.entity.Invoice;
@@ -11,14 +18,6 @@ import ch.mobi.ufi.domain.flight.vo.FlightIdentifier;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.annotation.PostConstruct;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /*
  * Workflow:

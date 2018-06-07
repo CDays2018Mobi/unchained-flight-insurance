@@ -16,4 +16,6 @@ public class InsurableFlight {
 	 */
 	private String delayProbability;
 	private List<RiskCoverage> riskCoverages;
+	private int contractCount;
+	// TODO add the total insuredAmount for all contractCount
 }
