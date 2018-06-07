@@ -11,4 +11,5 @@ import 'rxjs/add/operator/map';
 export class FinancialMovementListComponent {
 
   @Input() movements$: Observable<Movement[]>;
+  @Input() type: string;
 }

@@ -1,10 +1,10 @@
 <p-card title="Financial movements overview">
   <div class="ui-g">
     <div class="ui-g-6">
-      <app-financial-movement-list [movements$]="effectiveMovements$"></app-financial-movement-list>
+      <app-financial-movement-list [movements$]="effectiveMovements$" [type]="'Effective'"></app-financial-movement-list>
     </div>
     <div class="ui-g-6">
-      <app-financial-movement-list [movements$]="predictedMovements$"></app-financial-movement-list>
+      <app-financial-movement-list [movements$]="predictedMovements$" [type]="'Predicted'"></app-financial-movement-list>
     </div>
   </div>
 </p-card>
