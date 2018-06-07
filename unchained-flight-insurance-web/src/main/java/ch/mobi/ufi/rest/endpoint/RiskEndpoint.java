@@ -21,7 +21,7 @@ import ch.mobi.ufi.domain.flight.entity.Flight;
 import ch.mobi.ufi.domain.flight.service.FlightService;
 import ch.mobi.ufi.domain.flight.vo.FlightIdentifier;
 import ch.mobi.ufi.domain.risk.predictor.DelayEstimator;
-import ch.mobi.ufi.domain.risk.predictor.PricingCalculator;
+import ch.mobi.ufi.domain.pricing.calculator.PricingCalculator;
 import ch.mobi.ufi.domain.risk.predictor.RiskCoverage;
 
 @CrossOrigin

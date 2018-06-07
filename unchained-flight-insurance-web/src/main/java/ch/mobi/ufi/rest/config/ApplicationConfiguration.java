@@ -14,7 +14,7 @@ import ch.mobi.ufi.domain.flight.repository.FlightCache;
 import ch.mobi.ufi.domain.flight.service.FlightService;
 import ch.mobi.ufi.domain.risk.predictor.BayesianDelayEstimator;
 import ch.mobi.ufi.domain.risk.predictor.DelayEstimator;
-import ch.mobi.ufi.domain.risk.predictor.PricingCalculator;
+import ch.mobi.ufi.domain.pricing.calculator.PricingCalculator;
 import lombok.NonNull;
 
 @Configuration
