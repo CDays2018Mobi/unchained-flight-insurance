@@ -4,12 +4,12 @@
 
     <div class="ui-inputgroup">
       <span class="ui-inputgroup-addon"><i class="fa fa-plane"></i></span>
-      <input formControlName="flightId" type="text" pInputText placeholder="Flight id">
+      <input formControlName="flightId" type="text" pInputText placeholder="Flight id" (change)="flightChanged()">
     </div>
     <div class="ui-inputgroup">
       <span class="ui-inputgroup-addon"><i class="fa fa-calendar"></i></span>
       <p-calendar formControlName="arrivalDate" [showIcon]="true" dateFormat="yy-mm-dd"
-                  placeholder="Arrival date"></p-calendar>
+                  placeholder="Arrival date" (onSelect)="flightChanged()"></p-calendar>
     </div>
     <div class="ui-inputgroup">
       <span class="ui-inputgroup-addon"><i class="fa fa-ticket"></i></span>
@@ -19,7 +19,7 @@
     <br>
 
     <div>
-      <p-listbox [options]="coverageLevels" formControlName="coverageLevel">
+      <p-listbox [options]="riskCoverageItems" formControlName="riskCoverage">
         <ng-template let-level let-i="index" pTemplate="item">
           <table cellspacing="10">
             <tr>

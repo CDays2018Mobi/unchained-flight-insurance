@@ -3,9 +3,10 @@ import {SelectItem} from 'primeng/api';
 import {ContractClient} from '../../service/contract-client.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Contract} from '../../model/contract.model';
+import {RiskClient} from '../../service/risk-client.service';
+import {RiskCoverage} from '../../model/coverage.model';
+import {Flight} from '../../model/flight.model';
 import * as moment from 'moment';
-import {RiskClient} from "../../service/risk-client.service";
-import {Coverage} from "../../model/coverage.model";
 
 @Component({
   selector: 'app-subscription',
@@ -14,7 +15,7 @@ import {Coverage} from "../../model/coverage.model";
 })
 export class SubscriptionComponent implements OnInit {
 
-  coverageLevels: SelectItem[] = [];
+  riskCoverageItems: SelectItem[] = [];
   form: FormGroup;
 
   constructor(private fb: FormBuilder,
@@ -23,39 +24,55 @@ export class SubscriptionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.riskClient.getCoverages$().subscribe(coverages => {
-      this.coverageLevels = coverages.map(coverage => {
-        return <SelectItem>{label: coverage.name, value: coverage}
-      });
-    });
-
     this.form = this.fb.group({
         flightId: ['', [Validators.required]],
         arrivalDate: ['', [Validators.required]],
         ticketId: [''],
-        coverageLevel: ['', [Validators.required]],
+        riskCoverage: ['', [Validators.required]],
         email: ['', [Validators.required]],
       }
     );
   }
 
-  submit() {
-    const contract = new Contract(
+  currentFlight(): Flight {
+    return new Flight(
       this.form.value.flightId,
       moment(this.form.value.arrivalDate).format('YYYY-MM-DD'));
+  }
 
-    const coverage: Coverage = this.form.value.coverageLevel;
+  currentRiskCoverage(): RiskCoverage {
+    return this.form.value.riskCoverage;
+  }
+
+  flightChanged() {
+    const flight = this.currentFlight();
+
+    if (flight.flightId && flight.arrivalDate) {
+      this.riskClient.getRiskCoverages$(flight.flightId, flight.arrivalDate).subscribe(coverages => {
+        this.riskCoverageItems = coverages.map(coverage => {
+          return <SelectItem>{label: coverage.name, value: coverage}
+        });
+      });
+    } else {
+      this.riskCoverageItems = [];
+    }
+  }
+
+  submit() {
+    const flight: Flight = this.currentFlight();
+    const coverage: RiskCoverage = this.currentRiskCoverage();
+    const contract = new Contract(flight.flightId, flight.arrivalDate);
 
     window.location.href =
-      "https://pilot.datatrans.biz/upp/jsp/upStart.jsp" +
-      "?merchantId=1100004624" +
-      "&refno=1337" +
+      'https://pilot.datatrans.biz/upp/jsp/upStart.jsp' +
+      '?merchantId=1100004624' +
+      '&refno=1337' +
       `&amount=${coverage.premiumAmount * 100}` +
-      "&currency=CHF" +
-      "&paymentmethod=ECA" +
-      "&paymentmethod=VIS" +
-      "&theme=DT2015" +
-      "&successUrl=http://localhost:9000/api/v1/billing/payed" +
-      "&cancelUrl=http://localhost:9000/api/v1/billing/cancelled";
+      '&currency=CHF' +
+      '&paymentmethod=ECA' +
+      '&paymentmethod=VIS' +
+      '&theme=DT2015' +
+      '&successUrl=http://localhost:9000/api/v1/billing/payed' +
+      '&cancelUrl=http://localhost:9000/api/v1/billing/cancelled';
   }
 }

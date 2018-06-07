@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
-import {Coverage} from '../model/coverage.model';
-import 'rxjs/add/observable/of';
+import {RiskCoverage} from '../model/coverage.model';
+import 'rxjs/add/observable/of'
 
 @Injectable()
 export class RiskClient {
@@ -14,13 +14,14 @@ export class RiskClient {
     return 'http://localhost:9000/api/v1/risk';
   }
 
-  getCoverages$(): Observable<Coverage[]> {
+  getRiskCoverages$(flightNumber: string, arrivalDate: string): Observable<RiskCoverage[]> {
     return Observable.of([
-      new Coverage('Basic', 250, 10, true),
-      new Coverage('Medium', 500, 20, true),
-      new Coverage('Ultimate', 10000, 100, true)
-    ]);
-    //return this.http.get<Coverage[]>(`${this.url}/coverages`);
+      new RiskCoverage('Basic', 250, 10, true),
+      new RiskCoverage('Medium', 500, 20, true),
+      new RiskCoverage('Ultimate', 10000, 100, true)
+    ]);/*
+    return this.http.get<RiskCoverage[]>(`${this.url}/coverages?flightNumber=${flightNumber}&arrivalDate=${isoDate}`);
+  */
   }
 
 }

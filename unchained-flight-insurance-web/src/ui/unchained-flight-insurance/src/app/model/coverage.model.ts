@@ -1,4 +1,4 @@
-export class Coverage {
+export class RiskCoverage {
   constructor(public name: string,
               public insuredAmount: number,
               public premiumAmount: number,
