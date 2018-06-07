@@ -6,9 +6,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -54,6 +56,8 @@ public class FlightEndpoint {
         List<Flight> flights = flightService.refreshFlightList();
         return ok("refresh done: found " + flights.size() + " flights");
     }
+    
+    enum EnsurableState { ALL_DENIED, MAIN};
 
     /**
      * Returns the list of flights that can be insured.
@@ -63,15 +67,35 @@ public class FlightEndpoint {
     public ResponseEntity<List<InsurableFlight>> getInsurableFlights() {
     	int minDelay=60; // TODO use a configuration-based value from BayesianDelayEstimator.flightDelayThresholds
     	// TODO trouver un moyen de rafraichir le cache (workaround = polling manuel toutes les minutes sur /arrivals/refresh)
-    	List<Flight> flights = flightCache.getFlights(flight -> flight.getExpectedArrivalDate().isAfter(LocalDateTime.now().minusHours(4)));
+    	
+    	// we extract the list of all flights that can be insured and add on top 2 flights that cannot be insured (for education purpose), but other flights 
+    	
+    	List<Flight> flights = flightCache.getFlights(flight -> flight.getExpectedArrivalDate().isAfter(LocalDateTime.now().minusHours(1)));
     	List<InsurableFlight> insurableFlights = flights.stream()
     			.map(f->InsurableFlight.builder()
     					.flight(f)
-    					.delayProbability(Math.round(delayEstimator.computeProbabilityOfBeingDelayed(f, minDelay)*100d)/100d)
+    					.delayProbability(Integer.toString((int)Math.round(delayEstimator.computeProbabilityOfBeingDelayed(f, minDelay)*100d)))
     					.riskCoverages(pricingCalculator.getRiskCoverages(f, minDelay))
     					.build())
     			.collect(Collectors.toList());
-        return ok(insurableFlights);
+    	
+    	EnsurableState status = EnsurableState.ALL_DENIED;
+    	CircularFifoQueue<InsurableFlight> buf = new CircularFifoQueue<>(2); // we keep only the last 2 elements at the beginning of the list
+    	List<InsurableFlight> visibleInsurableFlights = new ArrayList<>();
+    	for (InsurableFlight insurableFlight : insurableFlights) {
+    		boolean noRiskCoverageAvailable = insurableFlight.getRiskCoverages().stream().noneMatch(rc->rc.isAvailable());
+    		if (status==EnsurableState.ALL_DENIED && noRiskCoverageAvailable) {
+    			// from the beginning all flights are not coverable => we remove them
+    			buf.add(insurableFlight); // fill the buffer
+    			continue;
+    		} else if (status==EnsurableState.ALL_DENIED) {
+    			status=EnsurableState.MAIN;
+    			visibleInsurableFlights.addAll(buf); // flush the buffer
+    		}
+    		visibleInsurableFlights.add(insurableFlight);
+    	}
+    	
+        return ok(visibleInsurableFlights);
     }
 
 }
