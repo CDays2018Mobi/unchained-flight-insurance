@@ -36,12 +36,15 @@ import lombok.extern.slf4j.Slf4j;
 public class
 GvaFlightsSupplier implements FlightsSupplier {
     private static final File FLIGHTCACHE_DIRECTORY = new File("./src/main/resources/flightcache");
+
     {
-    	LOG.info("flightcache directory for storing = {}", FLIGHTCACHE_DIRECTORY.getAbsolutePath());
+        LOG.info("flightcache directory for storing = {}", FLIGHTCACHE_DIRECTORY.getAbsolutePath());
     }
+
     private static final String CACHED_FILENAME_PREFIX = "gva_";
-    private static final String API_URL = "http://gva.ch/ajax/ArrivalDepartureSearch.aspx?type=A&day={day}&lang=2&time=0000&nline=1000&offset=0&_={timestamp}";
-	private ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+    private static final String API_URL = "http://gva.ch/ajax/ArrivalDepartureSearch" +
+            ".aspx?type=A&day={day}&lang=2&time=0000&nline=1000&offset=0&_={timestamp}";
+    private ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 
     @Override
     public List<Flight> getFlights(FlightParameters flightParameters) {
@@ -57,29 +60,30 @@ GvaFlightsSupplier implements FlightsSupplier {
             return flights;
         } else if (dayParam < -1) {
             // service has no data before yesterday => use cached data
-        	Resource[] resources;
-        	File[] files;
-    		try {
-    			resources = resolver.getResources("classpath*:/flightcache/"+CACHED_FILENAME_PREFIX + params.getDate()+"*.html");
-    			files = Arrays.stream(resources).map(r->{
-					try {
-						return r.getFile();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						return null;
-					}
-				}).collect(Collectors.toList()).toArray(new File[resources.length]);
-    	    	for (Resource resource: resources){
-    	    	    LOG.info(resource.getFilename()+" "+resource.getFile());
-    	    	}
-        	} catch (IOException e1) {
-    			// TODO Auto-generated catch block
-    			e1.printStackTrace();
-    			return flights;
-			}
+            Resource[] resources;
+            File[] files;
+            try {
+                resources = resolver.getResources("classpath*:/flightcache/" + CACHED_FILENAME_PREFIX + params.getDate() + "*.html");
+                files = Arrays.stream(resources).map(r -> {
+                    try {
+                        return r.getFile();
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        return null;
+                    }
+                }).collect(Collectors.toList()).toArray(new File[resources.length]);
+                for (Resource resource : resources) {
+                    LOG.info(resource.getFilename() + " " + resource.getFile());
+                }
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+                return flights;
+            }
 
-            //File[] files = FLIGHTCACHE_DIRECTORY.listFiles(file -> file.getName().startsWith(CACHED_FILENAME_PREFIX + params.getDate()));
+            //File[] files = FLIGHTCACHE_DIRECTORY.listFiles(file -> file.getName().startsWith(CACHED_FILENAME_PREFIX + params
+            // .getDate()));
             if (files.length == 0) {
                 // no cached data => no flights
                 return flights;
@@ -105,7 +109,7 @@ GvaFlightsSupplier implements FlightsSupplier {
             } else {
                 doc = Jsoup
                         .connect(queryUrl)
-                        .timeout(50 * 1000) // some requests takes 22 seconds
+                        .timeout(120 * 1000) // some requests takes 22 seconds
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0")
                         //.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0")
                         //.header("Accept-Encoding", "gzip, deflate")
@@ -115,15 +119,17 @@ GvaFlightsSupplier implements FlightsSupplier {
                         //.header("Host", "gva.ch")
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
                         .header("Accept-Language", "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3")
-                        //.header("Cookie", "ASP.NET_SessionId=tetp5w0odszc1mkelfw05ovw; BT_ctst=; BT_sdc=eyJldF9jb2lkIjoiNTU1ZWMxMzcwYmQyMGI5YzdiODJiZjUyNmFmYWU2MjciLCJyZnIiOiIiLCJ0aW1lIjoxNTI2ODI3NTA2MzkwLCJwaSI6NCwicmV0dXJuaW5nIjowLCJldGNjX2NtcCI6Ik5BIn0%3D; BT_pdc=eyJldGNjX2N1c3QiOjAsImVjX29yZGVyIjowLCJldGNjX25ld3NsZXR0ZXIiOjB9; nmstat=1526827553010; _ga=GA1.2.1106959508.1526827508; _gid=GA1.2.1224295352.1526827508; noWS_nQx2oE=true; _et_coid=555ec1370bd20b9c7b82bf526afae627")
+                        //.header("Cookie", "ASP.NET_SessionId=tetp5w0odszc1mkelfw05ovw; BT_ctst=;
+                        // BT_sdc=eyJldF9jb2lkIjoiNTU1ZWMxMzcwYmQyMGI5YzdiODJiZjUyNmFmYWU2MjciLCJyZnIiOiIiLCJ0aW1lIjoxNTI2ODI3NTA2MzkwLCJwaSI6NCwicmV0dXJuaW5nIjowLCJldGNjX2NtcCI6Ik5BIn0%3D; BT_pdc=eyJldGNjX2N1c3QiOjAsImVjX29yZGVyIjowLCJldGNjX25ld3NsZXR0ZXIiOjB9; nmstat=1526827553010; _ga=GA1.2.1106959508.1526827508; _gid=GA1.2.1224295352.1526827508; noWS_nQx2oE=true; _et_coid=555ec1370bd20b9c7b82bf526afae627")
                         .get();
                 // content not yet cached => cache it
-                try (PrintWriter out = new PrintWriter(new File(FLIGHTCACHE_DIRECTORY, CACHED_FILENAME_PREFIX + params.getDate().toString() + "_" + System.currentTimeMillis() + ".html"))) {
+                try (PrintWriter out = new PrintWriter(new File(FLIGHTCACHE_DIRECTORY, CACHED_FILENAME_PREFIX + params.getDate()
+                        .toString() + "_" + System.currentTimeMillis() + ".html"))) {
                     out.println(doc.html());
                     out.close();
                 } catch (IOException e) {
-                	// TODO gérer l'exception proprement
-                	e.printStackTrace();
+                    // TODO gérer l'exception proprement
+                    e.printStackTrace();
                 }
             }
 

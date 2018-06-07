@@ -63,6 +63,15 @@ export class SubscriptionComponent implements OnInit {
     const coverage: RiskCoverage = this.currentRiskCoverage();
     const contract = new Contract(flight.flightId, flight.expectedArrivalDate);
 
+    let params = '?' +
+      'flightId=' + flight.flightId + '&' +
+      'expectedArrivalDate=' + flight.expectedArrivalDate + '&' +
+      'status=' + flight.status + '&' +
+      'premiumAmount=' + coverage.premiumAmount + '&' +
+      'insuredAmount=' + coverage.insuredAmount + '&' +
+      'coverageName=' + coverage.name
+    ;
+
     window.location.href =
       'https://pilot.datatrans.biz/upp/jsp/upStart.jsp' +
       '?merchantId=1100004624' +
@@ -72,7 +81,7 @@ export class SubscriptionComponent implements OnInit {
       '&paymentmethod=ECA' +
       '&paymentmethod=VIS' +
       '&theme=DT2015' +
-      '&successUrl=http://localhost:9000/api/v1/billing/payed?flightId=' + flight.flightId +
-      '&cancelUrl=http://localhost:9000/api/v1/billing/cancelled?flightId=' + flight.flightId;
+      '&successUrl=http://localhost:9000/api/v1/billing/payed' + params +
+      '&cancelUrl=http://localhost:9000/api/v1/billing/cancelled' + params;
   }
 }
