@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
@@ -136,7 +135,7 @@ public class BayesianDelayEstimator implements DelayEstimator {
 		}
 
 		// show debug info
-		for (Entry<Object, ProbabilityMap<String>> entry : countPerAllDimensionGivenVariable.entrySet()) {
+		/*for (Entry<Object, ProbabilityMap<String>> entry : countPerAllDimensionGivenVariable.entrySet()) {
 			Object given = entry.getKey();
 			for (String key : entry.getValue().keySet()) {
 				LOG.info("p({}|{})={}", key, given, entry.getValue().getProbability(key));
@@ -144,7 +143,7 @@ public class BayesianDelayEstimator implements DelayEstimator {
 		}
 		for (String key : countPerAllDimension.keySet()) {
 			LOG.info("p({})={}", key, countPerAllDimension.getProbability(key));
-		}
+		}*/
 		
 		// validation/simulation
 		// Note: on calcule la probabilité de retard sur chaque vol de l'ensemble 

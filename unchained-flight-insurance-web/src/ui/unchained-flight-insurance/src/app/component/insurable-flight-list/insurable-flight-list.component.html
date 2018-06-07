@@ -10,8 +10,8 @@
   </ng-template>
   <ng-template pTemplate="body" let-item>
     <tr>
-      <td>{{item.flight.flightId}}</td>
-      <td>{{item.flight.status}}</td>
+      <td>{{item.flight.flightNumber}}</td>
+      <td>{{item.flight.flightStatus}}</td>
       <td>{{item.delayProbability * 100}} %</td>
       <td>
         <span [ngStyle]="{'color': (item.riskCoverages[0].available ? 'green' : 'black'),
