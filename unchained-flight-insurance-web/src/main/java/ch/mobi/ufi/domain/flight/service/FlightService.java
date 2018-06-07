@@ -1,5 +1,17 @@
 package ch.mobi.ufi.domain.flight.service;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
 import ch.mobi.ufi.domain.flight.entity.Flight;
 import ch.mobi.ufi.domain.flight.parameters.DefaultFlightParameters;
 import ch.mobi.ufi.domain.flight.repository.FlightCache;
@@ -10,13 +22,6 @@ import ch.mobi.ufi.domain.util.CsvMapper;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.annotation.PostConstruct;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -58,7 +63,7 @@ public class FlightService {
 
     @PostConstruct
     public void postConstruct() {
-        // refreshFlightList();
+        refreshFlightList();
     }
 
     /**
