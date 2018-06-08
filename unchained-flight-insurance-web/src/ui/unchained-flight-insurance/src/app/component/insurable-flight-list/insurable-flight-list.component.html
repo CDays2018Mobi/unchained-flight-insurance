@@ -1,4 +1,4 @@
-<p-card title="Insurable flights overview" subtitle="Real time information">
+<p-card title="Insurable flights overview" subtitle="Real time information" styleClass="transparent">
   <p-table [value]="insurableFlights$|async">
     <ng-template pTemplate="header">
       <tr>
@@ -16,7 +16,7 @@
         <td>{{item.flight.expectedArrivalDate | date: 'short'}}</td>
         <td>{{item.flight.flightStatus}}</td>
         <td>{{item.delayProbability}} %</td>
-        <td>{{item.contractCount}} %</td>
+        <td>{{item.contractCount}}</td>
         <td>
         <span [ngStyle]="{'color': (item.riskCoverages[0].available ? 'green' : 'black'),
                           'font-weight': (item.riskCoverages[0].available ? 'bold' : 'normal')

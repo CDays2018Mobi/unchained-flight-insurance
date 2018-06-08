@@ -18,7 +18,7 @@ export class InsurableFlightListComponent implements OnInit {
   ngOnInit() {
     setInterval(() => {
       location.reload();
-    }, 3000);
+    }, 300000);
 
     this.insurableFlights$ = this.flightClient.getInsurableFlights$();
   }
