@@ -64,11 +64,11 @@ export class SubscriptionComponent implements OnInit {
     const contract = new Contract(flight.flightId, flight.expectedArrivalDate);
 
     let params = '?' +
-      'flightId=' + flight.flightId + '&' +
-      'expectedArrivalDate=' + flight.expectedArrivalDate + '&' +
-      'status=' + flight.status + '&' +
-      'premiumAmount=' + coverage.premiumAmount + '&' +
-      'insuredAmount=' + coverage.insuredAmount + '&' +
+      'flightId=' + flight.flightId + '%26' +
+      'expectedArrivalDate=' + flight.expectedArrivalDate + '%26' +
+      'status=' + flight.status + '%26' +
+      'premiumAmount=' + coverage.premiumAmount + '%26' +
+      'insuredAmount=' + coverage.insuredAmount + '%26' +
       'coverageName=' + coverage.name
     ;
 

@@ -1,7 +1,7 @@
 <p-progressSpinner *ngIf="!fulfilled"></p-progressSpinner>
 
-<p-card *ngIf="fulfilled" title="Delayed flight insurance" subtitle="Congratulations">
-  <p-message severity="success" text="your subscription to the insurance has been fulfilled."></p-message>
+<p-card *ngIf="fulfilled" title="Subscription confirmation" subtitle="Congratulations!" styleClass="transparent">
+  <p-message severity="success" text="Your subscription to the insurance has been successfully processed."></p-message>
 
   <p-footer>
     <button pButton type="button"
