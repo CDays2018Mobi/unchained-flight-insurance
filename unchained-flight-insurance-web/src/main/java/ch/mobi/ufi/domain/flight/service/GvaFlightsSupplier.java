@@ -58,7 +58,7 @@ GvaFlightsSupplier implements FlightsSupplier {
         if (dayParam > 1) {
             // no data after tomorrow => return no data
             return flights;
-        } else if (dayParam < -1) {
+        } else if (dayParam <= 1) {
             // service has no data before yesterday => use cached data
             Resource[] resources;
             File[] files;
@@ -109,7 +109,7 @@ GvaFlightsSupplier implements FlightsSupplier {
             } else {
                 doc = Jsoup
                         .connect(queryUrl)
-                        .timeout(120 * 1000) // some requests takes 22 seconds
+                        .timeout(10000 * 1000) // some requests takes 22 seconds
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0")
                         //.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0")
                         //.header("Accept-Encoding", "gzip, deflate")
