@@ -6,17 +6,17 @@ import 'rxjs/add/observable/of'
 import {Flight, InsurableFlight} from '../model/flight.model';
 
 const insurableFlightsMock: InsurableFlight[] = [
-  new InsurableFlight(new Flight('GVA123', '2018-06-07', 'On time'), 0.5, [
+  new InsurableFlight(new Flight('GVA123', '2018-06-07', 'On time'), 0.5, 5, [
     new RiskCoverage('Bronze', 250, 50, true),
     new RiskCoverage('Silver', 500, 80, true),
     new RiskCoverage('Gold', 10000, 200, false)
   ]),
-  new InsurableFlight(new Flight('BRA2424', '2018-06-15', 'Delayed'), 0.9, [
+  new InsurableFlight(new Flight('BRA2424', '2018-06-15', 'Delayed'), 0.9, 2, [
     new RiskCoverage('Bronze', 250, 700, true),
     new RiskCoverage('Silver', 500, 1200, false),
     new RiskCoverage('Gold', 10000, 3000, false)
   ]),
-  new InsurableFlight(new Flight('DID69', '2018-07-22', 'On time'), 0.1, [
+  new InsurableFlight(new Flight('DID69', '2018-07-22', 'On time'), 0.1, 12, [
     new RiskCoverage('Bronze', 100, 10, true),
     new RiskCoverage('Silver', 500, 20, true),
     new RiskCoverage('Gold', 10000, 30, true)
