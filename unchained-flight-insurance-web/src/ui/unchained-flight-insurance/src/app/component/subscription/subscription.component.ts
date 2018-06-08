@@ -81,7 +81,7 @@ export class SubscriptionComponent implements OnInit {
       '&paymentmethod=ECA' +
       '&paymentmethod=VIS' +
       '&theme=DT2015' +
-      '&successUrl=http://localhost:9000/api/v1/billing/payed' + params +
+      '&successUrl=http://localhost:9000/api/v1/billing/succeeded' + params +
       '&cancelUrl=http://localhost:9000/api/v1/billing/cancelled' + params;
   }
 }
