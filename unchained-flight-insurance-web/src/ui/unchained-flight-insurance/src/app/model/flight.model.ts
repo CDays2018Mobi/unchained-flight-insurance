@@ -12,6 +12,7 @@ export class Flight {
 export class InsurableFlight {
   constructor(public flight: Flight,
               public delayProbability: number,
+              public contractCount: number,
               public riskCoverages: RiskCoverage[]) {
   }
 }
