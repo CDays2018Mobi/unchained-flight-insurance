@@ -1,12 +1,6 @@
 package ch.mobi.ufi.domain.contract.service;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
+import ch.mobi.ufi.document.DefaultDocumentGenerator;
 import ch.mobi.ufi.domain.contract.entity.Contract;
 import ch.mobi.ufi.domain.contract.repository.ContractRepository;
 import ch.mobi.ufi.domain.finance.entity.Invoice;
@@ -15,9 +9,18 @@ import ch.mobi.ufi.domain.finance.repository.CompensationRepository;
 import ch.mobi.ufi.domain.flight.entity.Flight;
 import ch.mobi.ufi.domain.flight.service.FlightService;
 import ch.mobi.ufi.domain.flight.vo.FlightIdentifier;
+import ch.mobi.ufi.mailing.Notifier;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.velocity.VelocityContext;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /*
  * Workflow:
@@ -40,9 +43,15 @@ public class ContractService {
     private CompensationRepository compensationRepository;
     @NonNull
     private ChargingRepository chargingRepository;
+    @NonNull
+    private DefaultDocumentGenerator documentGenerator;
+    @NonNull
+    private Notifier notifier;
+
 
     // TODO certains vols sont déjà connus comme en avance ou en retard (expectedDate+effectiveDate+pas de status) => il faut tenir compte de l'effectiveDate s'elle  est connu
-    public Contract createContract(FlightIdentifier flightIdentifier, Duration timeToCompensation) {
+    public Contract createContract(FlightIdentifier flightIdentifier,
+                                   Duration timeToCompensation) {
 
         // find the flight expected arrival date (fresh)
         Flight flight = flightService.findFreshFlight(flightIdentifier);
@@ -56,9 +65,14 @@ public class ContractService {
         }
 
         LOG.info("creating contract for flight number {}: {}", flightIdentifier, timeToCompensation);
-        Contract contract = Contract.builder().flightIdentifier(flightIdentifier).timeToCompensation(timeToCompensation).build();
+        Contract contract = Contract.builder()
+                .flightIdentifier(flightIdentifier)
+                .timeToCompensation(timeToCompensation)
+                .build();
 
         contractRepository.putContract(contract);
+
+        notifysubscription(flightIdentifier, "1783");
 
         makeInvoice(contract);
 
@@ -93,6 +107,30 @@ public class ContractService {
                 TimeUnit.MILLISECONDS);
     }
 
+    private void notifysubscription(FlightIdentifier flightIdentifier, String premiumAmount) {
+        VelocityContext context = new VelocityContext();
+        context.put("flightId", "flightIdentifier");
+        context.put("premiumAmount", premiumAmount);
+
+        notifier.notify(
+                "flight.insurance@mobi.ch",
+                "olivier.vondach@obya.ch",
+                "Subscription confirmation",
+                documentGenerator.generate(context, "subscription.vm"));
+    }
+
+    private void notifyRefund(FlightIdentifier flightIdentifier, String insuredAmount) {
+        VelocityContext context = new VelocityContext();
+        context.put("flightId", "flightIdentifier");
+        context.put("insuredAmount", insuredAmount);
+
+        notifier.notify(
+                "flight.insurance@mobi.ch",
+                "olivier.vondach@obya.ch",
+                "Refund notification",
+                documentGenerator.generate(context, "refund.vm"));
+    }
+
     // TODO potentially check effective/expected arrival date ; flight.getEffectiveArrivalDate()!=null;
     private boolean cannotInsure(Flight flight) {
         return flight.getFlightStatus() != null;
@@ -100,6 +138,7 @@ public class ContractService {
 
     @RequiredArgsConstructor
     private class RefreshFlightStatusRunnable implements Runnable {
+        final long RESCHEDULE_DELAY = 5;
         @NonNull
         Contract contract;
         @NonNull
@@ -108,8 +147,6 @@ public class ContractService {
         FlightIdentifier flightIdentifier;
         @NonNull
         Duration timeToCompensation;
-
-        final long RESCHEDULE_DELAY = 5;
 
         @Override
         public void run() {
@@ -124,6 +161,8 @@ public class ContractService {
                     effectiveArrivalDate.isAfter(freshFlight.getExpectedArrivalDate().plus(timeToCompensation))) {
                 // flight is arrived but is late => pay the compensation
                 compensationRepository.createCompensation(contract, flight);
+
+                notifyRefund(flight.getFlightIdentifier(), "10000");
 
             } else if (effectiveArrivalDate == null || freshFlight.getFlightStatus() == null) {
                 // flight is not yet arrived => schedule another for later

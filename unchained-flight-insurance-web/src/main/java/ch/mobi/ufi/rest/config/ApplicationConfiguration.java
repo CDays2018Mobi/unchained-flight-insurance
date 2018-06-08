@@ -1,5 +1,8 @@
 package ch.mobi.ufi.rest.config;
 
+import ch.mobi.ufi.document.DefaultDocumentGenerator;
+import ch.mobi.ufi.mailing.Notifier;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,15 +22,6 @@ import lombok.NonNull;
 
 @Configuration
 public class ApplicationConfiguration {
-
-    @NonNull
-    private ContractRepository contractRepository;
-    @NonNull
-    private FlightService flightService;
-    @NonNull
-    private CompensationRepository compensationRepository;
-    @NonNull
-    private ChargingRepository chargingRepository;
 
     @Bean
     public CompensationRepository compensationRepository() {
@@ -69,7 +63,15 @@ public class ApplicationConfiguration {
             ContractRepository contractRepository,
             FlightService flightService,
             CompensationRepository compensationRepository,
-            ChargingRepository chargingRepository) {
-        return new ContractService(contractRepository, flightService, compensationRepository, chargingRepository);
+            ChargingRepository chargingRepository,
+            DefaultDocumentGenerator documentGenerator,
+            Notifier notifier) {
+        return new ContractService(
+                contractRepository,
+                flightService,
+                compensationRepository,
+                chargingRepository,
+                documentGenerator,
+                notifier);
     }
 }
