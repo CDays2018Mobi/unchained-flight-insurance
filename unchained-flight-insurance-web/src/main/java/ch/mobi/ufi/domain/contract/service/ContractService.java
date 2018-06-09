@@ -72,7 +72,7 @@ public class ContractService {
 
         contractRepository.putContract(contract);
 
-        notifysubscription(flightIdentifier, "1783");
+        notifysubscription(flightIdentifier, "1538");
 
         makeInvoice(contract);
 
