@@ -33,7 +33,7 @@ public class EmailSender implements Notifier {
 
     private Session initSession() {
         final String username = "olivier.vondach@obya.ch";
-        final String secret = "..0googlebya..";
+        final String secret = "TODO";
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
